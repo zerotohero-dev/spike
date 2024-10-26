@@ -28,7 +28,7 @@ mechanism in case of irrecoverable failure.
 * It enables automatic recovery if **SPIKE Nexus** crashes.
 * It is co-located with **SPIKE Nexus* (on the same machine/node).
 
-## SPIKE Pilot
+### SPIKE Pilot
 
 * It is the CLI to the system.
 * It converts CLI commands to RESTful mTLS API calls to **SPIKE Nexus**.
@@ -37,26 +37,22 @@ mechanism in case of irrecoverable failure.
   of the system since admin operation will not be possible without
   **SPIKE Pilot**.
 
+### SPIKE Mint
 
-## SPIKE Mint
+**SPIKE Mint** is a standalone utility for generating initialization tokens.
+It creates cryptographically secure tokens with metadata:
 
-Standalone utility for generating initialization tokens
-Creates cryptographically secure tokens with metadata
-Features:
-
-256 bits of entropy per token
-Version tracking
-Creation timestamp
-Purpose field
-Optional expiry
-HMAC-based integrity verification
-Base64 encoded for transport
-
-
-CLI interface for admin usage
-Can validate existing tokens
-Ensures standardization of token format and security
-
+**Features**:
+* 256 bits of entropy per token
+* Version tracking
+* Creation timestamp
+* Purpose field
+* Optional expiry
+* HMAC-based integrity verification
+* Base64 encoded for transport
+* CLI interface for admin usage
+* Can validate existing tokens
+* Ensures standardization of token format and security
 
 ## Security Model
 
