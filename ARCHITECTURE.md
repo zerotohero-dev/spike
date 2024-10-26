@@ -69,7 +69,7 @@ Ensures standardization of token format and security
 ### Trust Boundaries
 
 * Primary trust boundary is at the machine level.
-* If **SPIKE Keeper* is compromised, the machine is considered compromised.
+* If **SPIKE Keeper** is compromised, the machine is considered compromised.
 * Both **SPIKE Nexus** and **SPIKE Keeper** are hardened. They use distroless
   containers to prevent various attack vectors.
 * The design assumes (*but does not mandate*) a containerized environment
