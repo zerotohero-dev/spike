@@ -26,7 +26,7 @@ mechanism in case of irrecoverable failure.
 * It is designed to be simple and reliable.
 * Its only goal is to keep a copy of the root key in memory.
 * It enables automatic recovery if **SPIKE Nexus** crashes.
-* It is co-located with **SPIKE Nexus* (on the same machine/node).
+* It is co-located with **SPIKE Nexus** (on the same machine/node).
 
 ### SPIKE Pilot
 
