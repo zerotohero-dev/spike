@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-func AppSpiffeId(ctx context.Context) string {
+func AppSpiffeSource(ctx context.Context) (*workloadapi.X509Source, string) {
 	// TODO: get this from env.
 	socketPath := "unix:///tmp/spire-agent/public/api.sock"
 
@@ -23,15 +23,6 @@ func AppSpiffeId(ctx context.Context) string {
 	if err != nil {
 		log.Fatalf("Unable to create X509Source: %v", err)
 	}
-	defer func(source *workloadapi.X509Source) {
-		if source == nil {
-			return
-		}
-		err := source.Close()
-		if err != nil {
-			log.Printf("Unable to close X509Source: %v", err)
-		}
-	}(source)
 
 	svid, err := source.GetX509SVID()
 	if err != nil {
@@ -40,5 +31,5 @@ func AppSpiffeId(ctx context.Context) string {
 
 	log.Printf("SVID: %s", svid.ID.String())
 
-	return svid.ID.String()
+	return source, svid.ID.String()
 }

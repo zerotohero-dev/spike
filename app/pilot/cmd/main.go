@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
 	"log"
 
 	"github.com/zerotohero-dev/spike/internal/spiffe"
@@ -17,7 +18,17 @@ const appName = "pilot"
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	log.Printf("SVID: %s", spiffe.AppSpiffeId(ctx))
+	source, spiffeid := spiffe.AppSpiffeSource(ctx)
+	defer func(source *workloadapi.X509Source) {
+		if source == nil {
+			return
+		}
+		err := source.Close()
+		if err != nil {
+			log.Printf("Unable to close X509Source: %v", err)
+		}
+	}(source)
+	log.Printf("SVID: %s", spiffeid)
 	log.Println(appName, "is running... Press Ctrl+C to exit")
 	system.KeepAlive()
 }

@@ -6,10 +6,11 @@ package main
 
 import (
 	"context"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"github.com/zerotohero-dev/spike/app/keeper/internal/server"
 	"log"
 
 	"github.com/zerotohero-dev/spike/internal/spiffe"
-	"github.com/zerotohero-dev/spike/internal/system"
 )
 
 const appName = "keeper"
@@ -17,10 +18,25 @@ const appName = "keeper"
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	log.Printf("SVID: %s", spiffe.AppSpiffeId(ctx))
-	log.Println(appName, "is running... Press Ctrl+C to exit")
+
+	source, spiffeid := spiffe.AppSpiffeSource(ctx)
+	defer func(source *workloadapi.X509Source) {
+		if source == nil {
+			return
+		}
+		err := source.Close()
+		if err != nil {
+			log.Printf("Unable to close X509Source: %v", err)
+		}
+	}(source)
+
+	log.Printf("SPIFFEID: %s", spiffeid)
 
 	// Start the server
-
-	system.KeepAlive()
+	log.Println("Started server")
+	err := server.Serve(source)
+	if err != nil {
+		log.Fatalln("failed to serve:", err.Error())
+		return
+	}
 }
