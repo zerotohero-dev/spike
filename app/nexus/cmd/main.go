@@ -6,10 +6,13 @@ package main
 
 import (
 	"context"
-	"github.com/spiffe/go-spiffe/v2/workloadapi"
 	"log"
 	"time"
 
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+
+	"github.com/zerotohero-dev/spike/app/nexus/internal/net"
+	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 	"github.com/zerotohero-dev/spike/internal/system"
 )
@@ -34,6 +37,11 @@ func main() {
 	log.Printf("SPIFFEID: %s\n", spiffeid)
 	log.Println(appName, "is running... Press Ctrl+C to exit")
 
+	err := state.Initialize()
+	if err != nil {
+		panic("Unable to initialize state: " + err.Error())
+	}
+
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 
@@ -41,7 +49,11 @@ func main() {
 		for {
 			select {
 			case <-ticker.C:
-				log.Println("hello")
+				err := net.UpdateCache()
+				if err != nil {
+					log.Printf("Unable to update cache: %v\n", err)
+					return
+				}
 			case <-ctx.Done():
 				return
 			}
