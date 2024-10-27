@@ -1,3 +1,9 @@
+```txt
+  \\ 
+ \\\\ SPIKE: Keep your secrets secret with SPIFFE.
+\\\\\\
+```
+
 ## SPIKE Design Document
 
 SPIKE (Secure Production Identity for Key Encryption) is a secrets management
