@@ -27,3 +27,13 @@ func UndeleteSecret() error {
 func ListSecretKeys() error {
 	return nil
 }
+
+func SaveAdminToken(token string) error {
+	// TODO: if SPIKE Nexus has an existing admin token,
+	// it should reject creating a new admin token.
+	// the admin token change shall be done
+	// either by updating the SPIKE Nexus db, and
+	// it would not be a standard operation.
+
+	return nil
+}

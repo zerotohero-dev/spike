@@ -172,29 +172,28 @@ func handleCommand(store *KVStore, args []string) {
 	}
 
 	/*
-			======
+		======
 
 
-				# First time system setup
-				$ pilot init
-				System initialized
-				Admin Token: abc123def456...
-				Please save this token securely. It will not be shown again.
-		    Token is saved to ~/.pilot-token for future use.
+			# First time system setup
+			$ pilot init
+			System initialized
 
-				# Login with admin token
-				$ pilot login --token abc123def456...
-				Login successful. Session token saved.
 
-				# Use the system with session token
-				$ pilot get secret/foo
+			# Login with admin token
+			$ pilot login --token abc123def456...
+			Login successful. Session token saved.
 
-				# Admin can create more user tokens
-				$ pilot token create --role operator
-				Created token: xyz789...
+			# Use the system with session token
+			$ pilot get secret/foo
+
+			# Admin can create more user tokens
+			$ pilot token create --role operator
+			Created token: xyz789...
 
 	*/
 
+	// TODO: write CLI documentation.
 	// TODO: these will be REST mTLS requests to Nexus
 	// TODO: anything that "reads" a secret will read it encrypted
 	command := args[1]
