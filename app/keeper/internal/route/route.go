@@ -31,6 +31,8 @@ func routeKeep(r *http.Request, w http.ResponseWriter) {
 }
 
 func factory(p, m string) handler {
+	log.Println("Factory:", p, urlKeep)
+
 	switch {
 	// Route to fetch the Keystone status.
 	// The status can be "pending" or "ready".

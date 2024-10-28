@@ -30,6 +30,8 @@ func main() {
 		}
 	}(source)
 
+	// TODO: validate self spiffeid.
+
 	log.Printf("SPIFFEID: %s", spiffeid)
 
 	// Start the server

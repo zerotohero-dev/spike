@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"github.com/zerotohero-dev/spike/internal/system"
 	"log"
 	"time"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/zerotohero-dev/spike/app/nexus/internal/net"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 	"github.com/zerotohero-dev/spike/internal/spiffe"
-	"github.com/zerotohero-dev/spike/internal/system"
 )
 
 const appName = "nexus"
@@ -42,6 +42,8 @@ func main() {
 		panic("Unable to initialize state: " + err.Error())
 	}
 
+	// TODO: validate self spiffe id.
+
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 
@@ -49,10 +51,9 @@ func main() {
 		for {
 			select {
 			case <-ticker.C:
-				err := net.UpdateCache()
+				err := net.UpdateCache(source)
 				if err != nil {
 					log.Printf("Unable to update cache: %v\n", err)
-					return
 				}
 			case <-ctx.Done():
 				return

@@ -18,6 +18,9 @@ const appName = "pilot"
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	// TODO: validate self spiffe id.
+
 	source, spiffeid := spiffe.AppSpiffeSource(ctx)
 	defer func(source *workloadapi.X509Source) {
 		if source == nil {
@@ -28,6 +31,7 @@ func main() {
 			log.Printf("Unable to close X509Source: %v", err)
 		}
 	}(source)
+
 	log.Printf("SVID: %s", spiffeid)
 	log.Println(appName, "is running... Press Ctrl+C to exit")
 	system.KeepAlive()
