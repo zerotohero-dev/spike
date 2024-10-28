@@ -166,7 +166,7 @@ Benefits:
 
 * Automated key rotation
 * Multiple Keeper instances for redundancy
-* Various backing stores (file system, postgres, clould secrets store)
+* Various backing stores (file system, postgres, cloud secrets store)
 * Key versioning for tracking encryption history
 
 ### Additional Monitoring
@@ -183,7 +183,10 @@ Benefits:
 * Regular backup verification of encrpted root key
 * Monitoring for anomalies and unusual access patterns
 
+## Architecture Decision Records
 
+The [`./adrs`](adrs) folder contains Architecture Decision Records for the
+project.
 
 
 

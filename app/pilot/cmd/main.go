@@ -172,63 +172,49 @@ func handleCommand(store *KVStore, args []string) {
 	}
 
 	/*
-		most secret management systems (including Vault) return the secrets in plaintext because:
-
-		They rely on TLS for transport security
-		They enforce short-lived sessions/tokens
-		They implement audit logging to track access
-		They assume if you can authenticate and are authorized, you should get the actual secret value
-		 that your policy authorizes you.
+			======
 
 
-		======
+				# First time system setup
+				$ pilot init
+				System initialized
+				Admin Token: abc123def456...
+				Please save this token securely. It will not be shown again.
+		    Token is saved to ~/.pilot-token for future use.
 
+				# Login with admin token
+				$ pilot login --token abc123def456...
+				Login successful. Session token saved.
 
-			# First time system setup
-			$ pilot init
-			System initialized
-			Admin Token: abc123def456...
-			Please save this token securely. It will not be shown again.
+				# Use the system with session token
+				$ pilot get secret/foo
 
-			# Login with admin token
-			$ pilot login --token abc123def456...
-			Login successful. Session token saved.
-
-			# Use the system with session token
-			$ pilot get secret/foo
-
-			# Admin can create more user tokens
-			$ pilot token create --role operator
-			Created token: xyz789...
+				# Admin can create more user tokens
+				$ pilot token create --role operator
+				Created token: xyz789...
 
 	*/
 
 	// TODO: these will be REST mTLS requests to Nexus
 	// TODO: anything that "reads" a secret will read it encrypted
-	// (so the operator will need to provide a key to decrypt it)
-	// (but is that necessary? pilot is a superadmin tool anyway;
-	// superadmin can provide a AES key but they will use the same
-	// key to decrypt the secret, and when they do, the secret will
-	// be visible on the terminal in plain text anyway.
-	// unless we block reading secrets from SPIKE Pilot, it does not
-	// make sense to return the secret encrypted.
-	// if `get`
 	command := args[1]
 	switch command {
+	case "init":
+		log.Printf("Command: %s %s", command, args)
 	case "put":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	case "get":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	case "delete":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	case "destroy":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	case "undelete":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	case "list":
-		log.Printf("Command: %s", command)
+		log.Printf("Command: %s %s", command, args)
 	default:
-		log.Printf("Unknown command: %s\n", command)
+		log.Printf("Unknown command: %s %s\n", command, args)
 	}
 }
 
