@@ -4,6 +4,8 @@
 
 package handle
 
+import "github.com/spiffe/go-spiffe/v2/workloadapi"
+
 //// parseVersions helper function to parse version numbers from command args
 //func parseVersions(args []string) []int {
 //	versions := []int{}
@@ -21,7 +23,7 @@ package handle
 //	return versions
 //}
 
-func Delete(args []string) {
+func Delete(source *workloadapi.X509Source, args []string) {
 	panic("handleDelete not implemented")
 
 	//		if len(args) < 3 {

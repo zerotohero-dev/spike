@@ -4,9 +4,12 @@
 
 package handle
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+)
 
-func Default(args []string) {
+func Default(source *workloadapi.X509Source, args []string) {
 	printUsage()
 }
 

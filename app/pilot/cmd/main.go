@@ -32,5 +32,5 @@ func main() {
 		}
 	}(source)
 
-	cli.Parse(os.Args)
+	cli.Parse(source, os.Args)
 }

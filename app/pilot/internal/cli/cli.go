@@ -4,11 +4,14 @@
 
 package cli
 
-import "github.com/zerotohero-dev/spike/app/pilot/internal/cli/handle"
+import (
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"github.com/zerotohero-dev/spike/app/pilot/internal/cli/handle"
+)
 
 // TODO: document all public methods.
 
-func Parse(args []string) {
+func Parse(source *workloadapi.X509Source, args []string) {
 	if len(args) < 2 {
 		handle.Usage(args)
 		return
@@ -17,18 +20,18 @@ func Parse(args []string) {
 	command := args[1]
 	switch command {
 	case "init":
-		handle.Init(args)
+		handle.Init(source, args)
 	case "put":
-		handle.Put(args)
+		handle.Put(source, args)
 	case "get":
-		handle.Get(args)
+		handle.Get(source, args)
 	case "delete":
-		handle.Delete(args)
+		handle.Delete(source, args)
 	case "undelete":
-		handle.Undelete(args)
+		handle.Undelete(source, args)
 	case "list":
-		handle.List(args)
+		handle.List(source, args)
 	default:
-		handle.Default(args)
+		handle.Default(source, args)
 	}
 }

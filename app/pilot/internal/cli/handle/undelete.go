@@ -4,7 +4,9 @@
 
 package handle
 
-func Undelete(args []string) {
+import "github.com/spiffe/go-spiffe/v2/workloadapi"
+
+func Undelete(source *workloadapi.X509Source, args []string) {
 	panic("handleUndelete not implemented")
 
 	//		if len(args) < 3 {

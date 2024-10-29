@@ -4,9 +4,12 @@
 
 package handle
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+)
 
-func Get(args []string) {
+func Get(source *workloadapi.X509Source, args []string) {
 
 	if len(args) < 3 {
 		fmt.Println("Usage: pilot get <path> [-version=<n>]")

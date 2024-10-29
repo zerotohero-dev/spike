@@ -6,13 +6,18 @@ package handle
 
 import (
 	"fmt"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/net"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"github.com/zerotohero-dev/spike/app/pilot/internal/state"
 	"github.com/zerotohero-dev/spike/internal/crypto"
-	"log"
 )
 
-func Init(args []string) {
-	if hasPilotToken() {
+// TODO: create sequence diagrams to reason about what's happening and see
+// if there are any gaps in the implementation.
+
+// TODO: initialize a website; does not have to be fancy.
+
+func Init(source *workloadapi.X509Source, args []string) {
+	if state.AdminTokenExists() {
 		fmt.Println("SPIKE Pilot is already initialized.")
 		fmt.Println("Nothing to do.")
 		return
@@ -20,20 +25,16 @@ func Init(args []string) {
 
 	// Generate and set the token
 	token := crypto.Token()
-	setPilotToken(token)
-
-	// Save the token to SPIKE Nexus
-	// This token will be used for Nexus to generated
-	// short-lived session tokens for the admin user.
-	err := net.SaveAdminToken(token)
+	err := state.SaveAdminToken(source, token)
 	if err != nil {
-		log.Println("Failed to save admin token to SPIKE Nexus: " + err.Error())
+		fmt.Println("Failed to save admin token:")
+		fmt.Println(err.Error())
 		return
 	}
 
 	fmt.Println(`    \\ SPIKE: Keep your secrets secret with SPIFFE.`)
 	fmt.Println(`  \\\\\ Copyright 2024-present SPIKE contributors.`)
-	fmt.Println(` \\\\\\\ SPDX-License-Identifier: Apache-2.0`)
+	fmt.Println(` \\\\\\\ web: spike.ist source: github.com/zerotohero-dev/spike`)
 	fmt.Println("")
 	fmt.Println("SPIKE system initialization completed.")
 	fmt.Println("")

@@ -4,9 +4,12 @@
 
 package handle
 
-import "log"
+import (
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"log"
+)
 
-func Put(args []string) {
+func Put(source *workloadapi.X509Source, args []string) {
 	log.Printf("Command: %s", args[1])
 
 	//		if len(args) < 4 {

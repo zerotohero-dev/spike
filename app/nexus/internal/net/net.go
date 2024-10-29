@@ -7,6 +7,7 @@ package net
 import (
 	"bytes"
 	"errors"
+	"github.com/zerotohero-dev/spike/internal/net"
 	"io"
 	"log"
 	"net/http"
@@ -105,5 +106,5 @@ func UpdateCache(source *workloadapi.X509Source) error {
 
 	path := "https://localhost:8443/v1/keep"
 
-	return doPost(client, path, md)
+	return net.Post(client, path, md, respond)
 }

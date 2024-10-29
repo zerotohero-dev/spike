@@ -4,7 +4,9 @@
 
 package handle
 
-func List(args []string) {
+import "github.com/spiffe/go-spiffe/v2/workloadapi"
+
+func List(source *workloadapi.X509Source, args []string) {
 	panic("handleList not implemented")
 
 	//		keys := make([]string, 0, len(store.data))
