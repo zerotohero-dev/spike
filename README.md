@@ -59,3 +59,22 @@ Start the workloads:
 That's about it.
 
 Enjoy.
+
+
+```text
+TODO: convert this to an ADR
+
+Idea: 
+Issue management:
+* This is a tiny project; so it does not need a big fat issue manager.
+  even a `to_do.txt` with every line in priority order is a good enough way
+  to manage things.
+* The development team (me, Volkan, initially) will use `to do` labels liberally
+  to designate what to do where in the project.
+* GitHub issues will be created on a "per need" basis. 
+* Also the community will be encouraged to create GitHub issues, yet it won't
+  be the team's main way to define issues or roadmap.
+* I believe this unorthodox way will provide agility.
+
+
+```
