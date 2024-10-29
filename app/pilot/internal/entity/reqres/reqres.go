@@ -28,8 +28,8 @@ type SecretWriteResponse struct {
 	SecretResponseMetadata
 }
 
-// ReadRequest for getting secrets (query params in URL)
-type ReadRequest struct {
+// SecretReadRequest for getting secrets (query params in URL)
+type SecretReadRequest struct {
 	Version int `json:"version,omitempty"` // Optional specific version
 }
 

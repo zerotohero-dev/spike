@@ -4,15 +4,14 @@
 
 package handle
 
-import "log"
+import "fmt"
 
 func Get(args []string) {
-	log.Printf("Command: %s", args[1])
 
-	//		if len(args) < 3 {
-	//			fmt.Println("Usage: pilot get <path> [-version=<n>]")
-	//			return
-	//		}
+	if len(args) < 3 {
+		fmt.Println("Usage: pilot get <path> [-version=<n>]")
+		return
+	}
 	//		version := 0
 	//		if len(args) > 3 && strings.HasPrefix(args[3], "-version=") {
 	//			fmt.Sscanf(args[3], "-version=%d", &version)
