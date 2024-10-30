@@ -29,7 +29,8 @@ func GetSecret(path string, version int) (*data.Secret, error) {
 		fmt.Sprintf("?version=%d", version),
 	)
 	if err != nil {
-		return nil, errors.Join(errors.New("GetSecret: failed to join secret url"), err)
+		return nil,
+			errors.Join(errors.New("GetSecret: failed to join secret url"), err)
 	}
 
 	fmt.Println("fetch:", secretUrl)
@@ -106,6 +107,7 @@ func SaveAdminToken(source *workloadapi.X509Source, token string) error {
 		},
 	}
 
+	// TODO: magic string.
 	path := "https://localhost:8553/v1/init"
 
 	return net.Post(client, path, mr, func(*http.Response) {})
