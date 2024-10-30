@@ -12,7 +12,7 @@ import (
 
 type handler func(*http.Request, http.ResponseWriter)
 
-const urlKeep = "/v1/keep"
+const urlInit = "/v1/init"
 
 func routeFallback(r *http.Request, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
@@ -22,25 +22,25 @@ func routeFallback(r *http.Request, w http.ResponseWriter) {
 	}
 }
 
-func routeKeep(r *http.Request, w http.ResponseWriter) {
+func routeInit(r *http.Request, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 
-	// TODO: implement me
+	// TODO: implement me.
 
 	_, err := io.WriteString(w, "OK")
 	if err != nil {
-		log.Println("routeKeep: Problem writing response:", err.Error())
+		log.Println("routeInit: Problem writing response:", err.Error())
 	}
 }
 
 func factory(p, m string) handler {
-	log.Println("Factory:", p, urlKeep)
+	log.Println("Factory:", p, urlInit)
 
 	switch {
 	// Route to fetch the Keystone status.
 	// The status can be "pending" or "ready".
-	case m == http.MethodPost && p == urlKeep:
-		return routeKeep
+	case m == http.MethodPost && p == urlInit:
+		return routeInit
 	// Fallback route.
 	default:
 		return routeFallback

@@ -1,0 +1,15 @@
+Things to ensure:
+
+SPIKE Nexus:
+1. SPIKE Keep cashes the root key.
+2. SPIKE Nexus reaches out to SPIKE keep if it does not have the root key.
+3. SPIKE Nexus tries to reach out to SPIKE keep with exponential backoff.
+4. If SPIKE Nexus is initialized, it does not re-init w/o manual intervention.
+5. Initialization will set a new root key and cache it in SPIKE Keep.
+
+SPIKE Pilot:
+1. SPIKE pilot deny any operation witout initialization.
+2. WIP.
+
+SPIKE Keep:
+1. WIP.

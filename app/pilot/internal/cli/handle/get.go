@@ -15,6 +15,9 @@ func Get(source *workloadapi.X509Source, args []string) {
 		fmt.Println("Usage: pilot get <path> [-version=<n>]")
 		return
 	}
+
+	// TODO: implement me.
+
 	//		version := 0
 	//		if len(args) > 3 && strings.HasPrefix(args[3], "-version=") {
 	//			fmt.Sscanf(args[3], "-version=%d", &version)

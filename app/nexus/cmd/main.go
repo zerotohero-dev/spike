@@ -6,7 +6,7 @@ package main
 
 import (
 	"context"
-	"github.com/zerotohero-dev/spike/internal/system"
+	"github.com/zerotohero-dev/spike/app/nexus/internal/server"
 	"log"
 	"time"
 
@@ -37,6 +37,8 @@ func main() {
 	log.Printf("SPIFFEID: %s\n", spiffeid)
 	log.Println(appName, "is running... Press Ctrl+C to exit")
 
+	// TODO: if initialized already, do not re-init.
+
 	err := state.Initialize()
 	if err != nil {
 		panic("Unable to initialize state: " + err.Error())
@@ -61,5 +63,12 @@ func main() {
 		}
 	}()
 
-	system.KeepAlive()
+	// system.KeepAlive()
+
+	log.Println("Started server")
+	err = server.Serve(source)
+	if err != nil {
+		log.Fatalln("failed to serve:", err.Error())
+		return
+	}
 }
