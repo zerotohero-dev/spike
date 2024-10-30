@@ -4,23 +4,6 @@
 #  \\\\\ Copyright 2024-present SPIKE contributors.
 # \\\\\\\ SPDX-License-Identifier: Apache-2.0
 
-if [ ! -f .token ]; then
-    echo "Error: token does not exist"
-    exit 1
-fi
-
-TOKEN=$(cat .token)
-
-if [ -z "$TOKEN" ]; then
-    echo "Error: token is empty"
-    exit 1
-fi
-
-echo "Token loaded successfully."
-
-# We probably don't need this.
-# AGENT_ID="spiffe://spike.ist/spire-agent/join_token/$TOKEN"
-
 KEEPER_PATH="$(pwd)/keeper"
 KEEPER_SHA=$(sha256sum "$KEEPER_PATH" | cut -d' ' -f1)
 

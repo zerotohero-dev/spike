@@ -24,3 +24,14 @@ SPIKE Keep:
 Next Up:
 
 * Assign secrets to SPIFFE ID prefixes.
+
+---- BUGS ---
+
+aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
+Failed to save admin token:
+failed to save token to nexus
+Post "https://localhost:8553/v1/init": dial tcp 127.0.0.1:8553: connect: connection refused
+post: Problem connecting to peer
+aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
+SPIKE is already initialized.
+Nothing to do.

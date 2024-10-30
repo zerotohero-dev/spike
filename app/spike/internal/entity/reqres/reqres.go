@@ -9,8 +9,8 @@ API Endpoints and their request/response mappings:
 
 1. Write Secret
 POST /v2/data/{path}
-Request:  SecretWriteRequest
-Response: SecretWriteResponse
+Request:  SecretPutRequest
+Response: SecretPUtResponse
 
 Example:
 POST /v2/data/secret/foo

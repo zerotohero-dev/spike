@@ -14,14 +14,15 @@ type SecretResponseMetadata struct {
 	Err         string     `json:"err,omitempty"`
 }
 
-// SecretWriteRequest for creating/updating secrets
-type SecretWriteRequest struct {
-	Data map[string]string `json:"data"`
-	Err  string            `json:"err,omitempty"`
+// SecretPutRequest for creating/updating secrets
+type SecretPutRequest struct {
+	Path   string            `json:"path"`
+	Values map[string]string `json:"values"`
+	Err    string            `json:"err,omitempty"`
 }
 
-// SecretWriteResponse after successful write
-type SecretWriteResponse struct {
+// SecretPutResponse after successful write
+type SecretPutResponse struct {
 	SecretResponseMetadata
 	Err string `json:"err,omitempty"`
 }

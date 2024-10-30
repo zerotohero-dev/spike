@@ -4,18 +4,20 @@
 #  \\\\\ Copyright 2024-present SPIKE contributors.
 # \\\\\\\ SPDX-License-Identifier: Apache-2.0
 
-# Verify file was created and is not empty
-if [ ! -s .token ]; then
-    echo "Error: Token file is empty or was not created" >&2
-    exit 1
-fi
+TOKEN_FILE=".spire-agent-join-token"
 
-if [ ! -f .token ]; then
+if [ ! -f $TOKEN_FILE ]; then
     echo "Error: token does not exist"
     exit 1
 fi
 
-JOIN_TOKEN=$(cat .token)
+# Verify file was created and is not empty
+if [ ! -s $TOKEN_FILE ]; then
+    echo "Error: Token file is empty or was not created" >&2
+    exit 1
+fi
+
+JOIN_TOKEN=$(cat $TOKEN_FILE)
 if [ -z "$JOIN_TOKEN" ]; then
     echo "Error: join token is empty"
     exit 1

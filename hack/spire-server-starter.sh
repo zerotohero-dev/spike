@@ -4,8 +4,8 @@
 #  \\\\\ Copyright 2024-present SPIKE contributors.
 # \\\\\\\ SPDX-License-Identifier: Apache-2.0
 
-rm .token
 rm .spike-token
+rm .spike-agent-join-token
 
 ./hack/build-spike.sh
 ./hack/clear-data.sh

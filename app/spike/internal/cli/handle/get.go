@@ -7,6 +7,7 @@ package handle
 import (
 	"fmt"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"github.com/zerotohero-dev/spike/app/spike/internal/state"
 )
 
 func Get(source *workloadapi.X509Source, args []string) {
@@ -17,6 +18,29 @@ func Get(source *workloadapi.X509Source, args []string) {
 	}
 
 	// TODO: implement me.
+
+	adminToken, err := state.AdminToken()
+	if err != nil {
+		fmt.Println(`    \\ SPIKE: Keep your secrets secret with SPIFFE.`)
+		fmt.Println(`  \\\\\ Copyright 2024-present SPIKE contributors.`)
+		fmt.Println(` \\\\\\\ web: spike.ist source: github.com/zerotohero-dev/spike`)
+		fmt.Println("")
+		fmt.Println("SPIKE is not initialized.")
+		fmt.Println("Please run `spike init` to initialize SPIKE.")
+		return
+	}
+
+	// TODO: for now we verify the admin token; later down the line, we will
+	// exchange the admin token with a short-lived token with `spike login`.
+	if adminToken == "" {
+		fmt.Println(`    \\ SPIKE: Keep your secrets secret with SPIFFE.`)
+		fmt.Println(`  \\\\\ Copyright 2024-present SPIKE contributors.`)
+		fmt.Println(` \\\\\\\ web: spike.ist source: github.com/zerotohero-dev/spike`)
+		fmt.Println("")
+		fmt.Println("SPIKE is not initialized.")
+		fmt.Println("Please run `spike init` to initialize SPIKE.")
+		return
+	}
 
 	//		version := 0
 	//		if len(args) > 3 && strings.HasPrefix(args[3], "-version=") {

@@ -28,7 +28,8 @@ go.work.sum
 .idea
 
 # App-specific:
-.token
+.spike-token
+.spire-agent-join-token
 .data
 .pilot-token
 /keeper

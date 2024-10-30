@@ -5,6 +5,7 @@
 package state
 
 import (
+	"github.com/zerotohero-dev/spike/app/nexus/internal/state/store"
 	"sync"
 
 	"github.com/zerotohero-dev/spike/app/nexus/internal/crypto"
@@ -14,6 +15,42 @@ var (
 	rootKey   string
 	rootKeyMu sync.RWMutex
 )
+
+var (
+	adminToken   string
+	adminTokenMu sync.RWMutex
+)
+
+var (
+	kv   = store.NewKV()
+	kvMu sync.RWMutex
+)
+
+func AdminToken() string {
+	adminTokenMu.RLock()
+	defer adminTokenMu.RUnlock()
+	return adminToken
+}
+
+func SetAdminToken(token string) {
+	adminTokenMu.Lock()
+	defer adminTokenMu.Unlock()
+	adminToken = token
+}
+
+func UpsertSecret(path string, values map[string]string) {
+	kvMu.Lock()
+	defer kvMu.Unlock()
+
+	kv.Put(path, values)
+}
+
+func GetSecret(path string, version int) (map[string]string, bool) {
+	kvMu.RLock()
+	defer kvMu.RUnlock()
+
+	return kv.Get(path, version)
+}
 
 func Initialize() error {
 	r, err := crypto.Aes256Seed()

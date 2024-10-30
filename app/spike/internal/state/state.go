@@ -39,7 +39,7 @@ func SaveAdminToken(source *workloadapi.X509Source, token string) error {
 	// Later, the admin user can be able to create username/token associations.
 
 	// Save token to file:
-	err := os.WriteFile(".pilot-token", []byte(token), 0600)
+	err := os.WriteFile(".spike-token", []byte(token), 0600)
 	if err != nil {
 		return errors.Join(errors.New("failed to save token to file"), err)
 	}
