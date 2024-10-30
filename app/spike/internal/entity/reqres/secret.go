@@ -8,7 +8,6 @@ import "time"
 
 type SecretResponseMetadata struct {
 	CreatedTime time.Time  `json:"created_time"`
-	Destroyed   bool       `json:"destroyed"`
 	Version     int        `json:"version"`
 	DeletedTime *time.Time `json:"deleted_time,omitempty"`
 	Err         string     `json:"err,omitempty"`
@@ -29,6 +28,7 @@ type SecretPutResponse struct {
 
 // SecretReadRequest for getting secrets (query params in URL)
 type SecretReadRequest struct {
+	Path    string `json:"path"`
 	Version int    `json:"version,omitempty"` // Optional specific version
 	Err     string `json:"err,omitempty"`
 }

@@ -40,5 +40,7 @@ func PutSecret(source *workloadapi.X509Source,
 	// TODO: magic string.
 	endpoint := "https://localhost:8553/v1/secrets"
 
-	return net.Post(client, endpoint, mr, func(*http.Response) {})
+	_, err = net.Post(client, endpoint, mr, func(*http.Response) {})
+
+	return err
 }

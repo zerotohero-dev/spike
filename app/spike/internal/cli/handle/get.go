@@ -7,7 +7,9 @@ package handle
 import (
 	"fmt"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
+	"github.com/zerotohero-dev/spike/app/spike/internal/net"
 	"github.com/zerotohero-dev/spike/app/spike/internal/state"
+	"strings"
 )
 
 func Get(source *workloadapi.X509Source, args []string) {
@@ -42,20 +44,49 @@ func Get(source *workloadapi.X509Source, args []string) {
 		return
 	}
 
-	//		version := 0
-	//		if len(args) > 3 && strings.HasPrefix(args[3], "-version=") {
-	//			fmt.Sscanf(args[3], "-version=%d", &version)
-	//		}
-	//		data, v, err := store.get(args[2], version)
-	//		if err != nil {
-	//			fmt.Printf("Error: %v\n", err)
-	//			return
-	//		}
-	//		fmt.Printf("=== Version %d ===\n", v.Version)
-	//		if v.DeletedTime != nil {
-	//			fmt.Printf("(Deleted at: %v)\n", *v.DeletedTime)
-	//		}
-	//		for k, v := range data {
-	//			fmt.Printf("%s: %s\n", k, v)
-	//		}
+	// TODO: we need a more capable arg parser.
+	version := 0
+	path := args[2]
+	if len(args) > 3 && strings.HasPrefix(args[3], "-version=") {
+		fmt.Sscanf(args[3], "-version=%d", &version)
+	}
+
+	secret, err := net.GetSecret(source, path, version)
+	if err != nil {
+		fmt.Println("Error reading secret:", err.Error())
+		return
+	}
+
+	data := secret.Data
+	for k, v := range data {
+		fmt.Printf("%s: %s\n", k, v)
+	}
 }
+
+/*
+func parseVersionFlag(arg string) (int, error) {
+    var version int
+    if strings.HasPrefix(arg, "-version=") {
+        _, err := fmt.Sscanf(arg, "-version=%d", &version)
+        return version, err
+    }
+    return 0, fmt.Errorf("invalid version flag: %s", arg)
+}
+
+func parseVersionsFlag(arg string) ([]int, error) {
+    if !strings.HasPrefix(arg, "-versions=") {
+        return nil, fmt.Errorf("invalid versions flag: %s", arg)
+    }
+    versions := strings.Split(strings.TrimPrefix(arg, "-versions="), ",")
+    result := make([]int, 0, len(versions))
+    for _, v := range versions {
+        n, err := strconv.Atoi(v)
+        if err != nil {
+            return nil, fmt.Errorf("invalid version number: %s", v)
+        }
+        result = append(result, n)
+    }
+    return result, nil
+}
+
+*/

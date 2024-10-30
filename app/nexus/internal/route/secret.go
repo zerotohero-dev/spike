@@ -7,11 +7,12 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/zerotohero-dev/spike/app/nexus/internal/entity/v1/reqres"
-	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/zerotohero-dev/spike/app/nexus/internal/entity/v1/reqres"
+	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 )
 
 func routePostSecret(r *http.Request, w http.ResponseWriter) {

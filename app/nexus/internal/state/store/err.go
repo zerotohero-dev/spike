@@ -7,8 +7,7 @@ package store
 import "errors"
 
 var (
-	ErrVersionNotFound  = errors.New("version not found")
-	ErrSecretNotFound   = errors.New("secret not found")
-	ErrVersionDestroyed = errors.New("version has been destroyed")
-	ErrInvalidVersion   = errors.New("invalid version")
+	ErrVersionNotFound = errors.New("version not found")
+	ErrSecretNotFound  = errors.New("secret not found")
+	ErrInvalidVersion  = errors.New("invalid version")
 )

@@ -26,7 +26,6 @@ type AdminTokenWriteResponse struct {
 
 type SecretResponseMetadata struct {
 	CreatedTime time.Time  `json:"created_time"`
-	Destroyed   bool       `json:"destroyed"`
 	Version     int        `json:"version"`
 	DeletedTime *time.Time `json:"deleted_time,omitempty"`
 	Err         string     `json:"err,omitempty"`
