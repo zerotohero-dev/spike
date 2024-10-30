@@ -5,8 +5,9 @@
 package state
 
 import (
-	"github.com/zerotohero-dev/spike/app/nexus/internal/crypto"
 	"sync"
+
+	"github.com/zerotohero-dev/spike/app/nexus/internal/crypto"
 )
 
 var (
@@ -19,6 +20,10 @@ func Initialize() error {
 	if err != nil {
 		return err
 	}
+
+	// TODO: save initialization status to Postgres.
+
+	// TODO: ADR: Use postgres as a backing store.
 
 	rootKeyMu.Lock()
 	rootKey = r

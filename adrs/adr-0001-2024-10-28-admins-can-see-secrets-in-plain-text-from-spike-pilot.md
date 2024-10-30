@@ -1,44 +1,77 @@
-+++
-#   \\ 
-#  \\\\ SPIKE: Keep your secrets secret with SPIFFE.
-# \\\\\\
+```text
+  \\ 
+ \\\\ SPIKE: Keep your secrets secret with SPIFFE.
+\\\\\\
+```
 
-title = "ADR-0001: Admins can see secrets in plain text from SPIKE Pilot CLI"
-+++
+# ADR-0001: Display Secrets in Plain Text in SPIKE Pilot Admin CLI
 
-- Status: draft
+- Status: final
 - Date: 2024-10-28
 - Tags: Security, Operations, Convenience
 
 ## Context and Problem Statement
 
-We might want to encrypt the secrets that we show through the SPIKE Pilot's 
-admin interface. This will enable end-to-end encryption and allow things like
-inadvertently displaying secrets in logs or history.
+The SPIKE Pilot admin interface needs to provide access to secrets for 
+administrative purposes. We need to determine the most secure and practical way 
+to display these secrets while maintaining system security and operational 
+efficiency.
 
-However, this causes more harm than good. Besides, if the intention of the
-admin user is to decrypt the secret, they likely have access to the decryption
-keys, and they can decrypt the encrypted secret anyway resulting in the very
-same issues that we were trying to avoid while making admins mildly inconvenient
-due to the additional decryption step.
+## Decision Drivers
 
-If an admin can write and delete secrets, it make sense for them to view the
-secrets too.
+* Security of sensitive information
+* Operational efficiency for administrators
+* Prevention of workarounds that could increase attack surface
+* Auditability of secret access
+* User experience for administrators
 
-An alternative is to "never" allow secrets to be read from the admin interface,
-but that will end up admins creating throwaway secret consumer apps to 
-"just read" secrets, installing them on the system, and increasing the attack
-surface even more.
+## Considered Options
 
-Besides:
+1. Display secrets in plain text
+2. Display only encrypted secrets
+3. Never display secrets through admin interface
 
-* SPIKE Pilot relies on mTLS to fetch secrets.
-* SPIKE Pilot enforces short-lived sessions.
-* SPIKE Nexus implements audit logging to track access.
-* So, if an entity is authenticated and authorized, and has adequate policy to
-  read a secret value; then they can get the secret value in plain.
+## Decision
 
-## Decision Outcome
+Display secrets in plain text in the SPIKE Pilot admin CLI, while providing 
+additional interfaces to view only keys or metadata when full secret values 
+aren't needed.
 
-Display secrets in plain text in the SPIKE Pilot admin cli; but also have an
-interface to just display keys, or metadata instead of secrets.
+## Rationale
+
+* Administrators who can write and delete secrets should logically be able to 
+  view them.
+* Encrypting displayed secrets provides false security since:
+  * Admins with access likely have decryption keys anyway
+  * It only adds inconvenience without meaningful security benefits
+* Preventing secret viewing would likely lead to:
+  * Creation of throwaway secret consumer apps
+  * Increased attack surface through workarounds
+* Existing security measures provide adequate protection:
+  * mTLS for secret fetching
+  * Short-lived sessions
+  * Audit logging through SPIKE Nexus
+  * Authentication and authorization checks
+
+## Consequences
+
+### Positive
+
+* Simplified admin operations
+* Reduced likelihood of workarounds
+* Clear audit trail of secret access
+* Consistent with principle of least surprise
+
+### Negative
+
+* Potential for secrets to appear in logs or command history
+* Increased responsibility on admin access control
+
+## Implementation Notes
+
+* Implement separate interfaces for:
+  * Full secret display
+  * Keys-only view
+  * Metadata-only view
+* Ensure proper audit logging of all secret access
+* Document proper terminal/session management for admins

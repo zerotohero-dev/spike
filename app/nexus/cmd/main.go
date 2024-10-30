@@ -17,6 +17,8 @@ import (
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 )
 
+// TODO: update the webiste once there is something demoable.
+
 const appName = "nexus"
 
 func main() {
@@ -62,8 +64,6 @@ func main() {
 			}
 		}
 	}()
-
-	// system.KeepAlive()
 
 	log.Println("Started server")
 	err = server.Serve(source)

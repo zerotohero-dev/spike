@@ -1,4 +1,7 @@
-Things to ensure:
+Things to Ensure:
+
+// Things to check to validate that SPIKE functions as intended,
+// so that we can add further features on top of the initial building blocks.
 
 SPIKE Nexus:
 1. SPIKE Keep cashes the root key.
@@ -8,8 +11,16 @@ SPIKE Nexus:
 5. Initialization will set a new root key and cache it in SPIKE Keep.
 
 SPIKE Pilot:
-1. SPIKE pilot deny any operation witout initialization.
-2. WIP.
+1. SPIKE pilot to deny any operation without initialization.
+2. Ability to set a secret using SPIKE pilot.
+3. Ability to read the secret using SPIKE pilot.
 
 SPIKE Keep:
-1. WIP.
+1. Ensure that the root key is stored in SPIKE keep's memory.
+2. Ensure that SPIKE keep returns root key back to SPIKE Nexus.
+
+--------------------------------------------------------------------------------
+
+Next Up:
+
+* Assign secrets to SPIFFE ID prefixes.
