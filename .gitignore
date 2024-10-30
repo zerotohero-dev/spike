@@ -30,6 +30,8 @@ go.work.sum
 # App-specific:
 .token
 .data
+.pilot-token
 /keeper
 /nexus
 /pilot
+/spike
