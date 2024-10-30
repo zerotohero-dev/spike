@@ -7,31 +7,36 @@ package state
 import (
 	"errors"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/net"
-	"log"
+	"github.com/zerotohero-dev/spike/app/spike/internal/net"
 	"os"
 	"sync"
 )
 
 var tokenMutex sync.RWMutex
 
-func AdminToken() string {
+func AdminToken() (string, error) {
 	tokenMutex.RLock()
 	defer tokenMutex.RUnlock()
 
 	// Try to read from file:
-	tokenBytes, err := os.ReadFile(".pilot-token")
+	tokenBytes, err := os.ReadFile(".spike-token")
 	if err != nil {
-		log.Printf("Failed to read token from file: %v", err)
-		return ""
+		return "", errors.Join(
+			errors.New("failed to read token from file"),
+			err,
+		)
 	}
 
-	return string(tokenBytes)
+	return string(tokenBytes), nil
 }
 
 func SaveAdminToken(source *workloadapi.X509Source, token string) error {
 	tokenMutex.Lock()
 	defer tokenMutex.Unlock()
+
+	// TODO: pilot login => exchanges admin token with a short-lived token.
+	// At initial phase there is only one admin user.
+	// Later, the admin user can be able to create username/token associations.
 
 	// Save token to file:
 	err := os.WriteFile(".pilot-token", []byte(token), 0600)
@@ -53,6 +58,6 @@ func SaveAdminToken(source *workloadapi.X509Source, token string) error {
 func AdminTokenExists() bool {
 	tokenMutex.RLock()
 	defer tokenMutex.RUnlock()
-	token := AdminToken()
+	token, _ := AdminToken()
 	return token != ""
 }

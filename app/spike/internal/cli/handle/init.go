@@ -7,7 +7,7 @@ package handle
 import (
 	"fmt"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/state"
+	"github.com/zerotohero-dev/spike/app/spike/internal/state"
 	"github.com/zerotohero-dev/spike/internal/crypto"
 )
 
@@ -18,13 +18,14 @@ import (
 
 func Init(source *workloadapi.X509Source, args []string) {
 	if state.AdminTokenExists() {
-		fmt.Println("SPIKE Pilot is already initialized.")
+		fmt.Println("SPIKE is already initialized.")
 		fmt.Println("Nothing to do.")
 		return
 	}
 
 	// Generate and set the token
 	token := crypto.Token()
+	username := args[2]
 	err := state.SaveAdminToken(source, token)
 	if err != nil {
 		fmt.Println("Failed to save admin token:")
@@ -37,10 +38,7 @@ func Init(source *workloadapi.X509Source, args []string) {
 	fmt.Println(` \\\\\\\ web: spike.ist source: github.com/zerotohero-dev/spike`)
 	fmt.Println("")
 	fmt.Println("SPIKE system initialization completed.")
-	fmt.Println("")
-	fmt.Println("Admin Token:", token)
-	fmt.Println("")
-	fmt.Println("Please save this token securely. It will not be shown again.")
-	fmt.Println("Token is saved to ./.pilot-token for future use.")
+	fmt.Println("Generated admin token for '" + username + "'.")
+	fmt.Println("Admin token is saved to ./.spike-token for future use.")
 	fmt.Println("")
 }

@@ -6,10 +6,10 @@
 
 rm keeper
 rm nexus
-rm pilot
+rm spike
 
 # `boringcrypto` is required for FIPS compliance.
 
 CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o keeper ./app/keeper/cmd/main.go
 CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o nexus ./app/nexus/cmd/main.go
-CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o pilot ./app/pilot/cmd/main.go
+CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o spike./app/spike/cmd/main.go

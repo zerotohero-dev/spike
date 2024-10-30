@@ -7,7 +7,7 @@ package main
 import (
 	"context"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/cli"
+	"github.com/zerotohero-dev/spike/app/spike/internal/cli"
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 	"log"
 	"os"

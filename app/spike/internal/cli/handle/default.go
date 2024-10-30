@@ -14,8 +14,13 @@ func Default(source *workloadapi.X509Source, args []string) {
 }
 
 func Usage(args []string) {
-	fmt.Println("Unknown command:" + args[1])
+	if len(args) <= 1 {
+		printUsage()
+		return
+	}
 
+	fmt.Println("Unknown command:" + args[1])
+	fmt.Println("")
 	printUsage()
 }
 

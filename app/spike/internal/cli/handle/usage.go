@@ -7,9 +7,9 @@ package handle
 import "fmt"
 
 func printUsage() {
-	fmt.Println("Usage: pilot <command> [args...]")
+	fmt.Println("Usage: spike <command> [args...]")
 	fmt.Println("Commands:")
-	fmt.Println("  init <username>")
+	fmt.Println("  init")
 	fmt.Println("  put <path> <key=value>...")
 	fmt.Println("  get <path> [-version=<n>]")
 	fmt.Println("  delete <path> [-versions=<n1,n2,...>]")

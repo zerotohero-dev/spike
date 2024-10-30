@@ -11,12 +11,12 @@ import (
 	"github.com/spiffe/go-spiffe/v2/spiffeid"
 	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/entity/reqres"
+	"github.com/zerotohero-dev/spike/app/spike/internal/entity/reqres"
 	"github.com/zerotohero-dev/spike/internal/net"
 	"net/http"
 	"net/url"
 
-	"github.com/zerotohero-dev/spike/app/pilot/internal/entity/data"
+	"github.com/zerotohero-dev/spike/app/spike/internal/entity/data"
 )
 
 func PutSecret() error {

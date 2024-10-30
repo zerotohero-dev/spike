@@ -29,7 +29,5 @@ func AppSpiffeSource(ctx context.Context) (*workloadapi.X509Source, string) {
 		log.Fatalf("Unable to get X509SVID: %v", err)
 	}
 
-	log.Printf("SVID: %s", svid.ID.String())
-
 	return source, svid.ID.String()
 }

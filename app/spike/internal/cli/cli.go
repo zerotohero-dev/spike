@@ -6,7 +6,7 @@ package cli
 
 import (
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/pilot/internal/cli/handle"
+	"github.com/zerotohero-dev/spike/app/spike/internal/cli/handle"
 )
 
 // TODO: document all public methods.

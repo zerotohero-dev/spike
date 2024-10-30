@@ -27,7 +27,7 @@ KEEPER_SHA=$(sha256sum "$KEEPER_PATH" | cut -d' ' -f1)
 NEXUS_PATH="$(pwd)/nexus"
 NEXUS_SHA=$(sha256sum "$NEXUS_PATH" | cut -d' ' -f1)
 
-PILOT_PATH="$(pwd)/pilot"
+PILOT_PATH="$(pwd)/spike"
 PILOT_SHA=$(sha256sum "$PILOT_PATH" | cut -d' ' -f1)
 
 # Register SPIKE Keeper

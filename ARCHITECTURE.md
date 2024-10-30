@@ -10,9 +10,9 @@ SPIKE (Secure Production Identity for Key Encryption) is a secrets management
 system build on top of a SPIFFE identity control plane, consisting of three
 components:
 
-* **SPIKE Nexus**
-* **SPIKE Pilot**
-* And **SPIKE Keeper**
+* **SPIKE Nexus** (./nexus)
+* **SPIKE Pilot** (./spike)
+* And **SPIKE Keeper** (./keeper)
 
 The system provides high availability for secret storage with a manual recovery
 mechanism in case of irrecoverable failure.

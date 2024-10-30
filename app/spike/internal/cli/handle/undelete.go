@@ -10,7 +10,7 @@ func Undelete(source *workloadapi.X509Source, args []string) {
 	panic("handleUndelete not implemented")
 
 	//		if len(args) < 3 {
-	//			fmt.Println("Usage: pilot undelete <path> [-versions=<n1,n2,...>]")
+	//			fmt.Println("Usage: spike undelete <path> [-versions=<n1,n2,...>]")
 	//			return
 	//		}
 	//		versions := parseVersions(args)

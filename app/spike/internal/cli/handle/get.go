@@ -12,7 +12,7 @@ import (
 func Get(source *workloadapi.X509Source, args []string) {
 
 	if len(args) < 3 {
-		fmt.Println("Usage: pilot get <path> [-version=<n>]")
+		fmt.Println("Usage: spike get <path> [-version=<n>]")
 		return
 	}
 
