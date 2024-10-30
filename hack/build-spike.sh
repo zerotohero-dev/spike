@@ -12,4 +12,4 @@ rm spike
 
 CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o keeper ./app/keeper/cmd/main.go
 CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o nexus ./app/nexus/cmd/main.go
-CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o spike./app/spike/cmd/main.go
+CGO_ENABLED=0 GOEXPERIMENT=boringcrypto go build -o spike ./app/spike/cmd/main.go

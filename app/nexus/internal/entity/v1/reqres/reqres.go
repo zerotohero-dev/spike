@@ -12,3 +12,12 @@ type RootKeyCacheRequest struct {
 type RootKeyCacheResponse struct {
 	Err string `json:"err,omitempty"`
 }
+
+type AdminTokenWriteRequest struct {
+	Data string `json:"data"`
+	Err  string `json:"err,omitempty"`
+}
+
+type AdminTokenWriteResponse struct {
+	Err string `json:"err,omitempty"`
+}

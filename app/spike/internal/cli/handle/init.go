@@ -25,7 +25,6 @@ func Init(source *workloadapi.X509Source, args []string) {
 
 	// Generate and set the token
 	token := crypto.Token()
-	username := args[2]
 	err := state.SaveAdminToken(source, token)
 	if err != nil {
 		fmt.Println("Failed to save admin token:")
@@ -37,8 +36,8 @@ func Init(source *workloadapi.X509Source, args []string) {
 	fmt.Println(`  \\\\\ Copyright 2024-present SPIKE contributors.`)
 	fmt.Println(` \\\\\\\ web: spike.ist source: github.com/zerotohero-dev/spike`)
 	fmt.Println("")
-	fmt.Println("SPIKE system initialization completed.")
-	fmt.Println("Generated admin token for '" + username + "'.")
-	fmt.Println("Admin token is saved to ./.spike-token for future use.")
+	fmt.Println("    SPIKE system initialization completed.")
+	fmt.Println("      Generated admin token and saved it to")
+	fmt.Println("        ./.spike-token for future use.")
 	fmt.Println("")
 }
