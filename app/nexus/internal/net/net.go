@@ -57,7 +57,7 @@ func respond(r *http.Response) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println(
-			"Post: Unable to read the response body from VSecM Safe.",
+			"Post: Unable to read the response body from SPIKE Nexus.",
 			err.Error())
 		return
 	}
@@ -106,5 +106,6 @@ func UpdateCache(source *workloadapi.X509Source) error {
 
 	path := "https://localhost:8443/v1/keep"
 
-	return net.Post(client, path, md, respond)
+	_, err = net.Post(client, path, md, respond)
+	return err
 }

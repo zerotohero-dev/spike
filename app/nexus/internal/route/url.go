@@ -6,3 +6,4 @@ package route
 
 const urlInit = "/v1/init"
 const urlSecrets = "/v1/secrets"
+const urlSecretsGet = "/v1/secrets?action=get"

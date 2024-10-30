@@ -45,7 +45,8 @@ func SaveAdminToken(source *workloadapi.X509Source, token string) error {
 	// TODO: magic string.
 	path := "https://localhost:8553/v1/init"
 
-	return net.Post(client, path, mr, func(*http.Response) {})
+	_, err = net.Post(client, path, mr, func(*http.Response) {})
+	return err
 }
 
 // TODO: better to use a full-blown CLI parser.

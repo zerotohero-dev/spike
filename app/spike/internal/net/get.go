@@ -18,7 +18,7 @@ import (
 
 func GetSecret(source *workloadapi.X509Source, path string, version int) (*data.Secret, error) {
 	// TODO: create a server at Nexus 8553 to listen and respond a dummy response.
-	secretUrl, err := url.JoinPath("https://localhost:8553/v1/secrets")
+	secretUrl, err := url.JoinPath("https://localhost:8553/v1/secrets?action=get")
 	if err != nil {
 		return nil,
 			errors.Join(errors.New("GetSecret: failed to join secret url"), err)
@@ -59,9 +59,5 @@ func GetSecret(source *workloadapi.X509Source, path string, version int) (*data.
 
 	return &data.Secret{
 		Data: res.Data,
-		Metadata: data.SecretMetaData{
-			CreatedTime: res.Metadata.CreatedTime,
-			Version:     res.Metadata.Version,
-			DeletedTime: res.Metadata.DeletedTime,
-		}}, nil
+	}, nil
 }

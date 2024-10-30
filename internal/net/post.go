@@ -32,19 +32,19 @@ func Post(client *http.Client, path string, mr []byte,
 	r, err := client.Post(path, "application/json", bytes.NewBuffer(mr))
 
 	if err != nil {
-		return "", errors.Join(
+		return []byte{}, errors.Join(
 			errors.New("post: Problem connecting to peer"),
 			err,
 		)
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return "", errors.New("post: Problem connecting to peer")
+		return []byte{}, errors.New("post: Problem connecting to peer")
 	}
 
 	b, err := body(r)
 	if err != nil {
-		return "", errors.Join(
+		return []byte{}, errors.Join(
 			errors.New("post: Problem reading response body"),
 			err,
 		)

@@ -8,9 +8,4 @@ func TlsPort() string {
 	return ":8443"
 
 	// TODO: make dynamic:
-	//p := env.Value(env.VSecMSafeTlsPort)
-	//if p == "" {
-	//	p = string(env.VSecMSafeTlsPortDefault)
-	//}
-	//return p
 }

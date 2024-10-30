@@ -6,9 +6,12 @@ package reqres
 
 import "time"
 
+// TODO: these entities are duplicated. move this to a higher level.
+
 type RootKeyCacheRequest struct {
 	RootKey string `json:"rootKey"`
-	Err     string `json:"err,omitempty"`
+	// TODO: we don't use Err fields at all: Maybe remove them?
+	Err string `json:"err,omitempty"`
 }
 
 type RootKeyCacheResponse struct {
@@ -42,4 +45,17 @@ type SecretPutRequest struct {
 type SecretPutResponse struct {
 	SecretResponseMetadata
 	Err string `json:"err,omitempty"`
+}
+
+// SecretReadRequest for getting secrets (query params in URL)
+type SecretReadRequest struct {
+	Path    string `json:"path"`
+	Version int    `json:"version,omitempty"` // Optional specific version
+	Err     string `json:"err,omitempty"`
+}
+
+// SecretReadResponse for getting secrets
+type SecretReadResponse struct {
+	Data map[string]string `json:"data"`
+	Err  string            `json:"err,omitempty"`
 }

@@ -35,9 +35,8 @@ type SecretReadRequest struct {
 
 // SecretReadResponse for getting secrets
 type SecretReadResponse struct {
-	Data     map[string]string      `json:"data"`
-	Metadata SecretResponseMetadata `json:"metadata"`
-	Err      string                 `json:"err,omitempty"`
+	Data map[string]string `json:"data"`
+	Err  string            `json:"err,omitempty"`
 }
 
 // SecretDeleteRequest for soft-deleting secret versions

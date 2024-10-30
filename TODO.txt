@@ -1,3 +1,7 @@
+#    \\ SPIKE: Keep your secrets secret with SPIFFE.
+#  \\\\\ Copyright 2024-present SPIKE contributors.
+# \\\\\\\ SPDX-License-Identifier: Apache-2.0
+
 Things to Ensure:
 
 // Things to check to validate that SPIKE functions as intended,
@@ -35,3 +39,7 @@ post: Problem connecting to peer
 aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
 SPIKE is already initialized.
 Nothing to do.
+
+---
+
+nexus display "http connection closed" warnings.
