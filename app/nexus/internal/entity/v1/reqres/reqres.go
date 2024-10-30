@@ -54,7 +54,7 @@ type SecretReadRequest struct {
 	Err     string `json:"err,omitempty"`
 }
 
-// SecretReadResponse for getting secrets
+// SecretReadResponsej for getting secrets
 type SecretReadResponse struct {
 	Data map[string]string `json:"data"`
 	Err  string            `json:"err,omitempty"`

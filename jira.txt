@@ -10,4 +10,5 @@
 @volkan #backlog Record a demo.
 @volkan #backlog Fix visible bugs.
 @volkan #backlog Refactor reqres entities to one level higher.
-@volkan #backlog source code cleanup
+@volkan #backlog source code cleanup.
+@volkan #backlog generate some sequence diagrams before it's too late.
