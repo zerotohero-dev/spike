@@ -9,20 +9,24 @@ import (
 	"log"
 
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
+
 	"github.com/zerotohero-dev/spike/internal/config"
 )
 
-// AppSpiffeSource creates and initializes a new X509Source for SPIFFE authentication.
+// AppSpiffeSource creates and initializes a new X509Source for SPIFFE
+// authentication.
 //
-// The function establishes a connection to the SPIRE Agent through a Unix domain socket
-// and retrieves the X509-SVID (SPIFFE Verifiable Identity Document) for the current workload.
-// This is typically used during application startup to set up SPIFFE-based authentication.
+// The function establishes a connection to the SPIRE Agent through a Unix
+// domain socket and retrieves the X509-SVID (SPIFFE Verifiable Identity
+// Document) for the current workload. This is typically used during application
+// startup to set up SPIFFE-based authentication.
 //
 // Parameters:
 //   - ctx: Context for controlling the source creation lifecycle
 //
 // Returns:
-//   - *workloadapi.X509Source: The initialized X509 source for SPIFFE authentication
+//   - *workloadapi.X509Source: The initialized X509 source for SPIFFE
+//     authentication
 //   - string: The SPIFFE ID string associated with the workload's X509-SVID
 //
 // The function will call log.Fatalf if it encounters errors during:

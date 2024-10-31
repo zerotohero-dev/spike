@@ -7,8 +7,6 @@ package net
 import (
 	"bytes"
 	"errors"
-	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
-	"github.com/zerotohero-dev/spike/internal/net"
 	"io"
 	"log"
 	"net/http"
@@ -19,8 +17,12 @@ import (
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
 
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
-	"github.com/zerotohero-dev/spike/app/nexus/internal/validation"
+	"github.com/zerotohero-dev/spike/internal/config"
+	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
+	"github.com/zerotohero-dev/spike/internal/net"
 )
+
+// TODO: cleanup.
 
 func newRootKeyCacheRequest(rootKey string) reqres.RootKeyCacheRequest {
 	return reqres.RootKeyCacheRequest{
@@ -30,7 +32,7 @@ func newRootKeyCacheRequest(rootKey string) reqres.RootKeyCacheRequest {
 
 func createAuthorizer() tlsconfig.Authorizer {
 	return tlsconfig.AdaptMatcher(func(id spiffeid.ID) error {
-		if validation.IsKeeper(id.String()) {
+		if config.IsKeeper(id.String()) {
 			return nil
 		}
 

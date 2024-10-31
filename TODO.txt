@@ -23,6 +23,10 @@ SPIKE Keep:
 1. Ensure that the root key is stored in SPIKE keep's memory.
 2. Ensure that SPIKE keep returns root key back to SPIKE Nexus.
 
+// TODO: update the webiste once there is something demoable.
+
+// TODO: use Log.Fatalf() instead of panic.
+
 --------------------------------------------------------------------------------
 
 /*

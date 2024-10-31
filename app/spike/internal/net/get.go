@@ -7,17 +7,20 @@ package net
 import (
 	"encoding/json"
 	"errors"
-	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
-	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/spike/internal/entity/data"
-	"github.com/zerotohero-dev/spike/app/spike/internal/entity/reqres"
-	"github.com/zerotohero-dev/spike/internal/net"
 	"net/http"
 	"net/url"
+
+	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
+
+	"github.com/zerotohero-dev/spike/app/spike/internal/entity/data"
+	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
+	"github.com/zerotohero-dev/spike/internal/net"
 )
 
+// TODO: verify and cleanup.
+
 func GetSecret(source *workloadapi.X509Source, path string, version int) (*data.Secret, error) {
-	// TODO: create a server at Nexus 8553 to listen and respond a dummy response.
 	secretUrl, err := url.JoinPath("https://localhost:8553/v1/secrets?action=get")
 	if err != nil {
 		return nil,

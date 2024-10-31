@@ -23,8 +23,8 @@ alias spike=$HOME/WORKSPACE/spike-git-repo/spike
 
 Simply typing `spike` will show a summary of available commands.
 
-```bash
-aegis@aegis:~/Desktop/WORKSPACE/spike$ spike
+```text
+[~/Desktop/WORKSPACE/spike]$ spike
 Usage: spike <command> [args...]
 Commands:
   init

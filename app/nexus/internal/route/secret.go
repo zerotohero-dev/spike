@@ -7,13 +7,15 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
 	"io"
 	"log"
 	"net/http"
 
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
+	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
 )
+
+// TODO: duplicate codes, needs cleanup.
 
 func routePostSecret(r *http.Request, w http.ResponseWriter) {
 	fmt.Println("routePostSecret:", r.Method, r.URL.Path, r.URL.RawQuery)

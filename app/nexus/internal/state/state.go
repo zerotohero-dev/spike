@@ -5,10 +5,10 @@
 package state
 
 import (
-	"github.com/zerotohero-dev/spike/app/nexus/internal/state/store"
 	"sync"
 
 	"github.com/zerotohero-dev/spike/app/nexus/internal/crypto"
+	"github.com/zerotohero-dev/spike/app/nexus/internal/state/store"
 )
 
 var (
@@ -53,6 +53,8 @@ func GetSecret(path string, version int) (map[string]string, bool) {
 }
 
 func Initialize() error {
+	// TODO: if initialized already, do not re-init.
+
 	r, err := crypto.Aes256Seed()
 	if err != nil {
 		return err
