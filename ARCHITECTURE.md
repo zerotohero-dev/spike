@@ -188,15 +188,80 @@ Benefits:
 The [`./adrs`](adrs) folder contains Architecture Decision Records for the
 project.
 
+## Sequence Diagrams 
 
+### SPIKE Nexus Root Key Provisioning and Recovery
 
+```mermaid
+sequenceDiagram
+    participant N as SPIKE Nexus
+    participant K as SPIKE Keeper
+    alt not initialized
+        Note over N: Create root key.
 
+        N->>+K: Send root key 
+    else already initialized
+        alt root key is empty
+            N->>+K: Fetch root key 
+            K->>+N: {root key}
+            Note over N,K: Log if root key is still empty.
+            Note over N,K: If root key is empty,<br>Manual admin intervention is required.
+        end
+    end
 
+    loop Every 5mins
+        alt SPIKE nexus not initialized
+            Note over N,K: skip this iteration.
+        end
 
+        alt when root key empty
+            N->>+K: Fetch root key 
+            K->>+N: {root key}
 
+            Note right of N: Log, if root key is still empty.
+            Note right of N: Skip the rest of the loop.
+        else is root key in memory
+            N->>+K: Send root key
 
+            Note over K: Cache in Memory
+        end
+    end
+```
 
+### SPIKE Initialization
 
+TBD
+
+Notes:
+* Creates a root key
+* Creates an "initialized" tombstone on the database.
+* May also create initial db table structure.
+
+### SPIKE Login
+
+TBD
+
+Notes:
+* Admin user will use the password they created during initialization to log in.
+* Login will create temporary tokens.
+* Admin user will send that token at each API request. Without a valid token
+  API requests will be invalid.
+
+### SPIKE Database Usage
+
+TBD
+
+Notes: 
+* SPIKE Pilot can save temporary session keys, etc to disk, but SPIKE Nexus 
+  will not use disk as a persistence medium; it will store everything either
+  in memory or in the db (Postgres). 
+
+### SPIKE Data Model
+
+TBD
+
+Notes:
+* Initially, we'll only support Postgres as a backing store.
 
 
 
