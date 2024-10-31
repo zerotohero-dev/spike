@@ -230,44 +230,163 @@ sequenceDiagram
 
 ### SPIKE Initialization
 
-TBD
+```mermaid
+sequenceDiagram
+    participant P as SPIKE Pilot (spike)
+    participant N as SPIKE Nexus
+    participant K as SPIKE Keeper
 
-Notes:
-* Creates a root key
-* Creates an "initialized" tombstone on the database.
-* May also create initial db table structure.
+    P->>+N: any API request
+
+    Note over N: Check the database for initialization status.
+    Note over N: Maybe create initial db schema if not exists.
+
+    N->>+P: not initialized. initialize the system first.
+
+    Note over P: user enters `spike init` from cli.
+
+    Note over P:  prompt for a password.
+
+    P->>+N: init { password }
+
+    alt not initialized
+        Note over N: create a root key
+        Note over N: keep root key in memory
+        Note over N: encrypt root key with the password
+
+        N->>+K: cache the root key for redundancy
+
+        Note over N: Create an `initialized tombstone in the database.
+
+        N->>+P: return the encrypted root key
+
+        Note over P: save encrypted root key locally.
+        Note over P: where the root key is saved is configurable.
+        Note over P: `spike login` will exhange the encrypted root key<br>and the password with short-lived session token.
+    else already initialized
+        N->>+P: error: already initialized
+    end
+```
 
 ### SPIKE Login
 
-TBD
+```mermaid
+sequenceDiagram
+    participant P as SPIKE Pilot (spike)
+    participant N as SPIKE Nexus
+        Note over P: This is for the admin user.<br>Any user that admin user creates will need<br>to provide a username too.
+        Note over P: SPIKE Pilot will ask for password<br>before sending the login request.
+        P->>+N: spike login 
 
-Notes:
-* Admin user will use the password they created during initialization to log in.
-* Login will create temporary tokens.
-* Admin user will send that token at each API request. Without a valid token
-  API requests will be invalid.
+      alt not initialized
+        N->>+P: not initialized. initialize first.
+      else already initialized
+        N->>+P: send temporary session token.
 
-### SPIKE Database Usage
+        Note over P: Save session token on file system.
+        Note over P: Use session token for any request to SPIKE Nexus
+        Note over P: TTL of token and the place the token<br>is saved are customizable.
 
-TBD
+      else nexus has no root token
+        N->>+P: warn user: admin may need to rekey/recover.
+      end
+```
 
-Notes: 
-* SPIKE Pilot can save temporary session keys, etc to disk, but SPIKE Nexus 
-  will not use disk as a persistence medium; it will store everything either
-  in memory or in the db (Postgres). 
+### SPIKE Nexus Automatic Recovery After Crash
 
-### SPIKE Data Model
+TBD.
 
-TBD
+### SPIKE Manual System Re-Initialization
 
-Notes:
-* Initially, we'll only support Postgres as a backing store.
+TBD.
 
+## SPIKE Database Usage
 
+**SPIKE Nexus** is the only client for the backing store (*Postgres DB*).
 
+Here are the things **SPIKE Nexus stores in the db.
 
+* **root key** (*encrypted with the admin password*)
+* **admin token** (*encrypted with the root key*)
+* **session keys** (*encrypted with the root key*)
+* **secrets** (*encrypted with the root key*)
 
+Note that both **admin token**, **session keys**, and **secrets**, are a kinds 
+of secrets from the data storage perspective.
 
+Also note that **SPIKE Pilot** (i.e. `spike`) can save temporary session keys
+and encrypted admin tokens on disk for convenience. Whereas **SPIKE Nexus** 
+will either store things in memory or keep them encrypted in a database, **never**
+saving anything on the file system.
 
+// TODO: create an ADR for this and other things in this document.
 
+## SPIKE Data Model
 
+Here is an initial data model (*subject to change during implementation*)
+
+Note that for simplicity, we'll initially only support **Postgres** as a
+backing store.
+
+```sql
+-- Enable UUID generation
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Enum for different types of secrets
+CREATE TYPE secret_type AS ENUM ('admin_token', 'session_key', 'secret');
+
+-- Store the root key (encrypted with admin password)
+CREATE TABLE root_keys (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    encrypted_key bytea NOT NULL,
+    key_hash bytea NOT NULL,  -- For verification
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    last_rotated_at timestamp with time zone,
+    active boolean DEFAULT true,
+    CONSTRAINT single_active_key UNIQUE (active)
+);
+
+-- Store all types of secrets (encrypted with root key)
+CREATE TABLE secrets (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name varchar(255) NOT NULL,
+    type secret_type NOT NULL,
+    encrypted_data bytea NOT NULL,
+    metadata jsonb,  -- For additional secret-specific data
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    expires_at timestamp with time zone,
+    version integer DEFAULT 1,
+    previous_version_id uuid REFERENCES secrets(id),
+    CONSTRAINT unique_active_name UNIQUE (name, type)
+);
+
+-- Audit log for all operations
+CREATE TABLE audit_logs (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    operation varchar(50) NOT NULL,
+    secret_id uuid REFERENCES secrets(id),
+    metadata jsonb,
+    performed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_secrets_type ON secrets(type);
+CREATE INDEX idx_secrets_name ON secrets(name);
+CREATE INDEX idx_audit_logs_secret_id ON audit_logs(secret_id);
+CREATE INDEX idx_audit_logs_performed_at ON audit_logs(performed_at);
+
+-- Add triggers for updating 'updated_at' timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_secrets_updated_at
+    BEFORE UPDATE ON secrets
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+```
