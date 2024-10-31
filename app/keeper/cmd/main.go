@@ -6,39 +6,30 @@ package main
 
 import (
 	"context"
-	"github.com/spiffe/go-spiffe/v2/workloadapi"
 	"github.com/zerotohero-dev/spike/app/keeper/internal/server"
+	"github.com/zerotohero-dev/spike/app/keeper/internal/validation"
+	"github.com/zerotohero-dev/spike/internal/config"
 	"log"
 
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 )
 
-const appName = "keeper"
+const appName = "SPIKE Keeper"
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	source, spiffeid := spiffe.AppSpiffeSource(ctx)
-	defer func(source *workloadapi.X509Source) {
-		if source == nil {
-			return
-		}
-		err := source.Close()
-		if err != nil {
-			log.Printf("Unable to close X509Source: %v", err)
-		}
-	}(source)
+	defer spiffe.CloseSource(source)
 
-	// TODO: validate self spiffeid.
-
-	log.Printf("SPIFFEID: %s", spiffeid)
+	if !validation.IsKeeper(spiffeid) {
+		log.Fatalf("SPIFFE ID %s is not valid.\n", spiffeid)
+	}
 
 	// Start the server
-	log.Println("Started server")
-	err := server.Serve(source)
-	if err != nil {
-		log.Fatalln("failed to serve:", err.Error())
-		return
+	log.Printf("Started service: %s v%s\n", appName, config.KeeperVersion)
+	if err := server.Serve(source); err != nil {
+		log.Fatalf("%s: Failed to serve: %s\n", appName, err.Error())
 	}
 }

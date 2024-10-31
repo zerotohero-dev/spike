@@ -7,11 +7,11 @@ package route
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
 	"io"
 	"log"
 	"net/http"
 
-	"github.com/zerotohero-dev/spike/app/nexus/internal/entity/v1/reqres"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 )
 
