@@ -7,6 +7,7 @@ package net
 import (
 	"bytes"
 	"errors"
+	"github.com/zerotohero-dev/spike/internal/entity/v1/reqres"
 	"github.com/zerotohero-dev/spike/internal/net"
 	"io"
 	"log"
@@ -17,7 +18,6 @@ import (
 	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
 
-	"github.com/zerotohero-dev/spike/app/nexus/internal/entity/v1/reqres"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/validation"
 )
