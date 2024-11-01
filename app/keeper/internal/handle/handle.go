@@ -5,15 +5,17 @@
 package handle
 
 import (
-	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/zerotohero-dev/spike/app/keeper/internal/route"
 	"net/http"
+
+	"github.com/zerotohero-dev/spike/app/keeper/internal/route"
 )
 
-func InitializeRoutes(source *workloadapi.X509Source) {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// TODO: implement me!
-
-		route.Route(r, w)
-	})
+// InitializeRoutes registers the main HTTP route handler for the application.
+// It sets up a single catch-all route "/" that forwards all requests to the
+// route.Route handler.
+//
+// This function should be called during application startup, before starting
+// the HTTP server.
+func InitializeRoutes() {
+	http.HandleFunc("/", route.Route)
 }

@@ -5,10 +5,14 @@
 #  About: This is where we keep track of our work log. Priority order is
 #         line number order. The topmost items will likely be done first.
 
-- Low Hanging Fruits
+- Low-Hanging Fruits
   - Read ARCHITECTURE.md and create ADRs off of it.
   - Use docsify and github pages redirection for docs (https://docsifyjs.org)
   - ADR: do not store session tokens in db. If SPIKE Nexus crashes, all sessions are gone.
+  - ticker := time.NewTicker(10 * time.Second) // for now; will be configurable.
+
+- Missing Endpoints to Implement
+  - app/keeper/internal/route/keep.go
 
 - BUG: Re-initing after failed initialization return success.
   aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
@@ -71,6 +75,18 @@
 Our goal is to have a minimally delightful product before adding more features.
 Anything that comes after the line above shall be done when everything (or
 the majority of things, at least) have been completed above already.
+
+- Security Measures (SPIKE Nexus)
+  - Encrypting the root key with admin password is good
+    Consider adding salt to the password encryption
+  - Maybe add a key rotation mechanism for the future
+  - Error Handling
+    - Good use of exponential retries
+    - Consider adding specific error types/codes for different failure scenarios
+    - Might want to add cleanup steps for partial initialization failures
+  - Redundancy
+    - Good that we cache the root key in Keeper
+    - Consider adding a health check between Nexus and Keeper
 
 - Unit tests and coverage reports.
 - Integration tests.

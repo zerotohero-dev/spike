@@ -245,15 +245,29 @@ sequenceDiagram
 
     Note over P: user enters `spike init` from cli.
 
-    Note over P:  prompt for a password.
+    Note over P: prompt for admin password
+    Note over P: prompt for db username
+    Note over P: prompt for db password
 
-    P->>+N: init { password }
+    P->>+N: init { password, dbUser, dbPassword }
 
     alt not initialized
         Note over N: create a root key
         Note over N: keep root key in memory
-        Note over N: encrypt root key with the password
-
+        
+        Note over N: encrypt root key with the admin password
+        Note over N: prepare connection string 
+       
+        Note over N: test connection
+        
+        alt connection successful
+            Note over N: keep connection string in memory
+            Note over N: encrypt the connection string with root key
+            Note over N: save the encrypted connection string on file system
+        else connection failed (after several retries)
+            Note over N: exit with initialization failure
+        end
+        
         N->>+K: cache the root key for redundancy
 
         alt try exponential

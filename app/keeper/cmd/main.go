@@ -6,9 +6,11 @@ package main
 
 import (
 	"context"
+	"github.com/zerotohero-dev/spike/app/keeper/internal/env"
+	"github.com/zerotohero-dev/spike/app/keeper/internal/handle"
+	"github.com/zerotohero-dev/spike/internal/net"
 	"log"
 
-	"github.com/zerotohero-dev/spike/app/keeper/internal/server"
 	"github.com/zerotohero-dev/spike/internal/config"
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 )
@@ -30,7 +32,9 @@ func main() {
 	}
 
 	log.Printf("Started service: %s v%s\n", appName, config.KeeperVersion)
-	if err := server.Serve(source); err != nil {
+	if err := net.Serve(
+		source, handle.InitializeRoutes, env.TlsPort(),
+	); err != nil {
 		log.Fatalf("%s: Failed to serve: %s\n", appName, err.Error())
 	}
 }

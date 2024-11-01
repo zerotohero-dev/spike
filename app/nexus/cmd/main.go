@@ -9,10 +9,12 @@ import (
 	"log"
 	"time"
 
+	"github.com/zerotohero-dev/spike/app/nexus/internal/env"
+	"github.com/zerotohero-dev/spike/app/nexus/internal/handle"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/poll"
-	"github.com/zerotohero-dev/spike/app/nexus/internal/server"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state"
 	"github.com/zerotohero-dev/spike/internal/config"
+	"github.com/zerotohero-dev/spike/internal/net"
 	"github.com/zerotohero-dev/spike/internal/spiffe"
 )
 
@@ -32,17 +34,19 @@ func main() {
 		log.Fatalf("SPIFFE ID %s is not valid.\n", spiffeid)
 	}
 
-	err := state.Initialize()
+	err = state.Initialize()
 	if err != nil {
 		log.Fatalf("Unable to initialize state: " + err.Error())
 	}
 
-	ticker := time.NewTicker(60 * time.Second)
+	ticker := time.NewTicker(10 * time.Second) // for now; will be configurable.
 	defer ticker.Stop()
 	go poll.Tick(ctx, source, ticker)
 
 	log.Printf("Started service: %s v%s\n", appName, config.NexusVersion)
-	if err := server.Serve(source); err != nil {
+	if err := net.Serve(
+		source, handle.InitializeRoutes, env.TlsPort(),
+	); err != nil {
 		log.Fatalf("%s: Failed to serve: %s\n", appName, err.Error())
 	}
 }

@@ -5,48 +5,17 @@
 package route
 
 import (
-	"io"
-	"log"
 	"net/http"
 )
 
-type handler func(*http.Request, http.ResponseWriter)
-
-const urlKeep = "/v1/keep"
-
-func routeFallback(r *http.Request, w http.ResponseWriter) {
-	w.WriteHeader(http.StatusBadRequest)
-	_, err := io.WriteString(w, "")
-	if err != nil {
-		log.Println("routeFallback: Problem writing response:", err.Error())
-	}
-}
-
-func routeKeep(r *http.Request, w http.ResponseWriter) {
-	w.WriteHeader(http.StatusOK)
-
-	// TODO: implement me
-
-	_, err := io.WriteString(w, "OK")
-	if err != nil {
-		log.Println("routeKeep: Problem writing response:", err.Error())
-	}
-}
-
-func factory(p, m string) handler {
-	log.Println("Factory:", p, urlKeep)
-
-	switch {
-	// Route to fetch the Keystone status.
-	// The status can be "pending" or "ready".
-	case m == http.MethodPost && p == urlKeep:
-		return routeKeep
-	// Fallback route.
-	default:
-		return routeFallback
-	}
-}
-
-func Route(r *http.Request, w http.ResponseWriter) {
+// Route handles all incoming HTTP requests by dynamically selecting and
+// executing the appropriate handler based on the request path and HTTP method.
+// It uses a factory function to create the specific handler for the given URL
+// path and HTTP method combination.
+//
+// Parameters:
+//   - w: The HTTP ResponseWriter to write the response to
+//   - r: The HTTP Request containing the client's request details
+func Route(w http.ResponseWriter, r *http.Request) {
 	factory(r.URL.Path, r.Method)(r, w)
 }

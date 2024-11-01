@@ -27,7 +27,7 @@ func factory(p, a, m string) handler {
 	}
 }
 
-func Route(r *http.Request, w http.ResponseWriter) {
+func Route(w http.ResponseWriter, r *http.Request) {
 	factory(r.URL.Path, r.URL.Query().Get("action"), r.Method)(r, w)
 }
 
