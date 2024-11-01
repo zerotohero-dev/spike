@@ -10,6 +10,12 @@
   - Use docsify and github pages redirection for docs (https://docsifyjs.org)
   - ADR: do not store session tokens in db. If SPIKE Nexus crashes, all sessions are gone.
   - ticker := time.NewTicker(10 * time.Second) // for now; will be configurable.
+  - make the binaries FIPS-compatible by default.
+
+- state.SetAdminToken(adminToken) // This is temporary, for demo. Update it based on new sequence diagrams.
+- adminToken := req.Data // admin token will be auto created, we just need a strong password, and sanitize that password
+
+- use a structured logger with log levels.
 
 - Missing Endpoints to Implement
   - app/keeper/internal/route/keep.go
@@ -75,6 +81,11 @@
 Our goal is to have a minimally delightful product before adding more features.
 Anything that comes after the line above shall be done when everything (or
 the majority of things, at least) have been completed above already.
+
+- Ability to rotate the root key (automatic via Nexus).
+- Ability to rotate the admin token (manual).
+- Admin tokens can expire.
+- Encourage to create users for auditing instead of relying on the s
 
 - Security Measures (SPIKE Nexus)
   - Encrypting the root key with admin password is good

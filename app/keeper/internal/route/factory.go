@@ -5,13 +5,10 @@
 package route
 
 import (
-	"log"
 	"net/http"
 )
 
 func factory(p, m string) handler {
-	log.Println("Factory:", p, urlKeep)
-
 	switch {
 	// Route to fetch the Keystone status.
 	// The status can be "pending" or "ready".

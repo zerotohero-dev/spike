@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func routeFallback(r *http.Request, w http.ResponseWriter) {
+func routeFallback(_ *http.Request, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
 	_, err := io.WriteString(w, "")
 	if err != nil {

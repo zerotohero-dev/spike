@@ -7,8 +7,8 @@ package state
 import (
 	"sync"
 
-	"github.com/zerotohero-dev/spike/app/nexus/internal/crypto"
 	"github.com/zerotohero-dev/spike/app/nexus/internal/state/store"
+	"github.com/zerotohero-dev/spike/internal/crypto"
 )
 
 var (

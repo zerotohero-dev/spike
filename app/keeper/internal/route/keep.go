@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func routeKeep(r *http.Request, w http.ResponseWriter) {
+func routeKeep(_ *http.Request, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 
 	log.Println("routeKeep::implement Me")

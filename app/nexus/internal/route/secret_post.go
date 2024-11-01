@@ -1,8 +1,8 @@
+package route
+
 //    \\ SPIKE: Keep your secrets secret with SPIFFE.
 //  \\\\\ Copyright 2024-present SPIKE contributors.
 // \\\\\\\ SPDX-License-Identifier: Apache-2.0
-
-package route
 
 import (
 	"encoding/json"
@@ -16,8 +16,8 @@ import (
 	"github.com/zerotohero-dev/spike/internal/net"
 )
 
-func routeInit(r *http.Request, w http.ResponseWriter) {
-	fmt.Println("routeInit:", r.Method, r.URL.Path, r.URL.RawQuery)
+func routePostSecret(r *http.Request, w http.ResponseWriter) {
+	fmt.Println("routePostSecret:", r.Method, r.URL.Path, r.URL.RawQuery)
 
 	w.WriteHeader(http.StatusOK)
 
@@ -26,18 +26,20 @@ func routeInit(r *http.Request, w http.ResponseWriter) {
 		return
 	}
 
-	var req reqres.AdminTokenWriteRequest
+	var req reqres.SecretPutRequest
 	if err := net.HandleRequestError(w, json.Unmarshal(body, &req)); err != nil {
 		log.Println("routeInit: Problem handling request:", err.Error())
 		return
 	}
 
-	adminToken := req.Data          // admin token will be auto created, we just need a strong password, and sanitize that password
-	state.SetAdminToken(adminToken) // This is temporary, for demo. Update it based on new sequence diagrams.
-	log.Println("routeInit: Admin token saved")
+	values := req.Values
+	path := req.Path
+
+	state.UpsertSecret(path, values)
+	log.Println("routePostSecret: Secret upserted")
 
 	_, err := io.WriteString(w, "")
 	if err != nil {
-		log.Println("routeInit: Problem writing response:", err.Error())
+		log.Println("routePostSecret: Problem writing response:", err.Error())
 	}
 }
