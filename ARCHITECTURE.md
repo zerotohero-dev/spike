@@ -256,13 +256,10 @@ sequenceDiagram
 
         N->>+K: cache the root key for redundancy
 
-        Note over N: Create an `initialized tombstone in the database.
+        Note over N: Create an `initialized` tombstone in the database.
+        Note over N: Save the encrypted root key in the database.
 
-        N->>+P: return the encrypted root key
-
-        Note over P: save encrypted root key locally.
-        Note over P: where the root key is saved is configurable.
-        Note over P: `spike login` will exhange the encrypted root key<br>and the password with short-lived session token.
+        Note over P: `spike login` will exchange the password with a short-lived session token.
     else already initialized
         N->>+P: error: already initialized
     end
@@ -294,11 +291,70 @@ sequenceDiagram
 
 ### SPIKE Nexus Automatic Recovery After Crash
 
-TBD.
+```mermaid
+sequenceDiagram
+    Note over N: SPIKE Nexus crashes, while SPIKE Keeper is still alive<br>and has root key in its memory.
+
+    participant N as SPIKE Nexus
+    participant K as SPIKE Keeper
+
+    alt SPIKE Nexus needs root key
+        Note over N: Search for the key in memory.
+        Note over N: Fail to find key in memory.
+
+        N->>+K: send me the cached key you have.
+
+        K->>+N: here it is.
+
+        Note over N: SPIKE Nexus saves the root key in memory.
+        Note over N: SPIKE Nexus resumes normal operation.
+    end
+```
 
 ### SPIKE Manual System Re-Initialization
 
-TBD.
+```mermaid 
+sequenceDiagram
+    participant P as SPIKE Pilot (spike)
+    participant N as SPIKE Nexus
+
+    Note over P,N: Total system crash.<br>SPIKE Pilot is<br>unable to recover the root key.
+
+    Note over P: Admin logs in (with password)
+    Note over P: Admin execute `spike recover`
+    Note over P: Confirm: Are you sure?
+    Note over P: Request admin password (i.e. don't trust the session key)
+
+    P->>+N: POST /v1/recover
+
+    Note over N: Use password to decrypt the root key in the db.
+
+    Note over N: Root key is restored, normal operation can continue.
+```
+
+### SPIKE Forced Root Key Reset
+
+This will make all the stored secrets obsolete, so it should be done
+as a last resort. This may be required in cases where the database has been
+corrupted, or the admin user has lost access to their password manager
+(we hope that they don't memorize passwords, and they have more trusted ways
+of keeping random long-lived passwords elsewhere, like system keyring, or a 
+password manager).
+
+```mermaid
+sequenceDiagram
+    participant P as Admin User
+        Note over P: This is an out-of-band operation.<br>It will not touch SPIRE #semi;<br>however it will reset SPIKE to its day zero setting.
+    alt skies have fallen apart
+        Note over P: Total system crash.<br>Admin forgot their password.<br>Database corrupt.<br>Or the system is in a similar irrecoverable state.
+        Note over P: Admin runs `./hack/reset.sh` to reset the system to day zero.
+        Note over P: Prompt: Are you really sure? This will wipe all secrets. And it's irreversible.
+        Note over P: Any key or token saved on the file system will be wiped out.
+        Note over P: The database will be reset to the initial state.
+        Note over P: SPIKE Pilot and SPIKE Nexus will be restarted.
+        Note over P: System reset. Admin can re-run `spike init`.
+    end
+```
 
 ## SPIKE Database Usage
 
@@ -318,8 +374,6 @@ Also note that **SPIKE Pilot** (i.e. `spike`) can save temporary session keys
 and encrypted admin tokens on disk for convenience. Whereas **SPIKE Nexus** 
 will either store things in memory or keep them encrypted in a database, **never**
 saving anything on the file system.
-
-// TODO: create an ADR for this and other things in this document.
 
 ## SPIKE Data Model
 

@@ -27,6 +27,11 @@ SPIKE Keep:
 
 // TODO: use Log.Fatalf() instead of panic.
 
+// TODO: create an ADR for things in Architecture.md and other things in this document.
+
+// TODO: use docsify github pages and domain redirection for docs.
+// https://docsify.js.org/#/deploy
+
 --------------------------------------------------------------------------------
 
 /*
