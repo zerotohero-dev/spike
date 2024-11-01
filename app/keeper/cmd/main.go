@@ -19,7 +19,10 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	source, spiffeid := spiffe.AppSpiffeSource(ctx)
+	source, spiffeid, err := spiffe.AppSpiffeSource(ctx)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 	defer spiffe.CloseSource(source)
 
 	if !config.IsKeeper(spiffeid) {

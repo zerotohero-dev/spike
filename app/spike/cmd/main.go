@@ -20,13 +20,15 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	source, spiffeid := spiffe.AppSpiffeSource(ctx)
+	source, spiffeid, err := spiffe.AppSpiffeSource(ctx)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	defer spiffe.CloseSource(source)
 
 	if !config.IsPilot(spiffeid) {
 		log.Fatalf("SPIFFE ID %s is not valid.\n", spiffeid)
 	}
-
-	defer spiffe.CloseSource(source)
 
 	log.Printf("%s v%s\n", appName, config.PilotVersion)
 

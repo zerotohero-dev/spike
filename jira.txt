@@ -4,11 +4,77 @@
 #
 #  About: This is where we keep track of our work log. Priority order is
 #         line number order. The topmost items will likely be done first.
-#
-# Syntax: @username #state {brief description of the issue}
 
-@volkan #backlog Record a demo.
-@volkan #backlog Fix visible bugs.
-@volkan #backlog Refactor reqres entities to one level higher.
-@volkan #backlog source code cleanup.
-@volkan #backlog generate some sequence diagrams before it's too late.
+- Low Hanging Fruits
+  - Read ARCHITECTURE.md and create ADRs off of it.
+  - Use docsify and github pages redirection for docs (https://docsifyjs.org)
+  - ADR: do not store session tokens in db. If SPIKE Nexus crashes, all sessions are gone.
+
+- BUG: Re-initing after failed initialization return success.
+  aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
+  Failed to save admin token:
+  failed to save token to nexus
+  Post "https://localhost:8553/v1/init": dial tcp 127.0.0.1:8553: connect: connection refused.
+  post: Problem connecting to peer
+  aegis@aegis:~/Desktop/WORKSPACE/spike$ spike init
+  SPIKE is already initialized.
+  Nothing to do.
+
+- BUG: SPIKE Nexus display "http connection closed" warnings.
+
+- Immediate Backlog
+  - Record a demo.
+  - Fix visible bugs.
+  - Refactor reqres entities to one level higher.
+  - Source code cleanup.
+  - generate some sequence diagrams before it's too late.
+  - Create a documentation website.
+  - Have a way to clean up outdated session tokens to avoid memory leaks.
+
+- Feat: Soft Deletes
+  POST /v1/secrets?action=delete
+
+- Feat: Undelete (versions)
+
+- Feat: List
+  POST /v1/secrets
+
+- SPIKE Nexus Sanity Tests
+  - Ensure SPIKE Nexus caches the root key in memory.
+  - Ensure SPIKE Nexus reads from SPIKE keep if it does not have the root key.
+  - Ensure SPIKE Nexus saves the encrypted root key to the database.
+  - Ensure SPIKE Nexus caches the user's session key.
+  - Ensure SPIKE Nexus removes outdated session keys.
+  - Ensure SPIKE Nexus does not re-init (without manual intervention) after
+    being initialized.
+  - Ensure SPIKE Nexus adheres to the bootstrapping sequence diagram.
+  - Ensure SPIKE Nexus backs up the admin token by encrypting it with the root
+    key and storing in the database.
+  - Ensure SPIKE Nexus stores the initialization tombstone in the database.
+
+- SPIKE Pilot Sanity Tests
+  - Ensure SPIKE Pilot denies any operation if SPIKE Nexus is not initialized.
+  - Ensure SPIKE Pilot can warn if SPIKE Nexus is unreachable
+  - Ensure SPIKE Pilot does not indefinitely hang up if SPIRE is not there.
+  - Ensure SPIKE Pilot can get and set a secret.
+  - Ensure SPIKE Pilot can do a force reset.
+  - Ensure SPIKE Pilot can recover the root password.
+  - Ensure that after `spike init` you have a password-encrypted root key in the db.
+  - Ensure that you can recover the password-encrypted root key.
+
+- SPIKE Keep Sanity Tests
+  - Ensure that the root key is stored in SPIKE Keep's memory.
+  - Ensure that SPIKE Keep can return the root key back to SPIKE Nexus.
+
+---------------------- AFTER THIS POINT IS FAR FUTURE --------------------------
+
+Our goal is to have a minimally delightful product before adding more features.
+Anything that comes after the line above shall be done when everything (or
+the majority of things, at least) have been completed above already.
+
+- Unit tests and coverage reports.
+- Integration tests.
+- Test automation.
+- Assigning secrets to SPIFFE IDs or SPIFFE ID prefixes.
+- RW policies for workloads based on path and SPIFFE IDs.
+- Secret metadata API.

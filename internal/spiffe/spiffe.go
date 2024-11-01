@@ -6,6 +6,7 @@ package spiffe
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
@@ -29,10 +30,10 @@ import (
 //     authentication
 //   - string: The SPIFFE ID string associated with the workload's X509-SVID
 //
-// The function will call log.Fatalf if it encounters errors during:
+// The function will call return an error if it encounters errors during:
 //   - X509Source creation
 //   - X509-SVID retrieval
-func AppSpiffeSource(ctx context.Context) (*workloadapi.X509Source, string) {
+func AppSpiffeSource(ctx context.Context) (*workloadapi.X509Source, string, error) {
 	socketPath := config.SpiffeEndpointSocket()
 
 	source, err := workloadapi.NewX509Source(
@@ -43,15 +44,21 @@ func AppSpiffeSource(ctx context.Context) (*workloadapi.X509Source, string) {
 	)
 
 	if err != nil {
-		log.Fatalf("Unable to create X509Source: %v", err)
+		return nil, "", errors.Join(
+			errors.New("failed to create X509Source"),
+			err,
+		)
 	}
 
 	svid, err := source.GetX509SVID()
 	if err != nil {
-		log.Fatalf("Unable to get X509SVID: %v", err)
+		return nil, "", errors.Join(
+			errors.New("unable to get X509SVID"),
+			err,
+		)
 	}
 
-	return source, svid.ID.String()
+	return source, svid.ID.String(), nil
 }
 
 // CloseSource safely closes an X509Source.
