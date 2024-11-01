@@ -256,8 +256,17 @@ sequenceDiagram
 
         N->>+K: cache the root key for redundancy
 
-        Note over N: Create an `initialized` tombstone in the database.
-        Note over N: Save the encrypted root key in the database.
+        alt try exponential
+            Note over N: Save the encrypted root key in the database.
+            Note over N: Verify database record.
+        else failure after exhausting retries
+            Note over N,K: return
+            Note over N,K: system failed to initialize
+        end
+       
+        alt try exponential 
+            Note over N: Create an `initialized` tombstone in the database.
+        end
 
         Note over P: `spike login` will exchange the password with a short-lived session token.
     else already initialized
@@ -271,43 +280,66 @@ sequenceDiagram
 sequenceDiagram
     participant P as SPIKE Pilot (spike)
     participant N as SPIKE Nexus
-        Note over P: This is for the admin user.<br>Any user that admin user creates will need<br>to provide a username too.
-        Note over P: SPIKE Pilot will ask for password<br>before sending the login request.
-        P->>+N: spike login 
+    
+    Note over P: This is for the admin user.<br>Any user that admin user creates will need<br>to provide a username too.
+    Note over P: SPIKE Pilot will ask for password<br>before sending the login request.
+    Note over P: Verify root token existence before login.
+    Note over P: If root token cannot be recovered, warn admin that they may need to rekey/recover.
+    Note over P: If not initialized, warn user to initialize first.
 
-      alt not initialized
-        N->>+P: not initialized. initialize first.
-      else already initialized
-        N->>+P: send temporary session token.
+    P->>+N: spike login 
+    N->>+P: send temporary session token.
 
-        Note over P: Save session token on file system.
-        Note over P: Use session token for any request to SPIKE Nexus
-        Note over P: TTL of token and the place the token<br>is saved are customizable.
-
-      else nexus has no root token
-        N->>+P: warn user: admin may need to rekey/recover.
-      end
+    Note over P: Save session token to the file system.
+    Note over P: Use session token for any request to SPIKE Nexus.
+    Note over P: TTL of token and the place the token<br>is saved are customizable.
 ```
 
 ### SPIKE Nexus Automatic Recovery After Crash
 
 ```mermaid
 sequenceDiagram
-    Note over N: SPIKE Nexus crashes, while SPIKE Keeper is still alive<br>and has root key in its memory.
+    Note over N,K: Whenever possible, retry<br>with exponential backoff
 
     participant N as SPIKE Nexus
     participant K as SPIKE Keeper
+    alt not initialized
+        Note over N: Generate root key with strong entropy
+        Note over N: Validate key format and strength
 
-    alt SPIKE Nexus needs root key
-        Note over N: Search for the key in memory.
-        Note over N: Fail to find key in memory.
+        N->>+K: Send root key 
+        K-->>N: Acknowledge receipt
 
-        N->>+K: send me the cached key you have.
+        Note over K: Verify key format before caching        
+    else already initialized
+        alt root key is empty
+            N->>+K: Request root key 
+            K-->>N: {root key}
+            Note over N,K: Log if root key is still empty.
+            Note over N,K: If root key is empty,<br>Manual admin intervention is required.
+        end
+    end
 
-        K->>+N: here it is.
+    loop Every 5mins (configurable)
+        alt SPIKE Nexus not initialized
+            Note over N,K: skip this iteration.
+        end
 
-        Note over N: SPIKE Nexus saves the root key in memory.
-        Note over N: SPIKE Nexus resumes normal operation.
+        alt SPIKE Keep unreachable
+            Note over N,K: skip this iteration.
+        end
+
+        alt when root key empty
+            N->>+K: Fetch root key 
+            K-->>N: {root key}
+
+            Note right of N: Log, if root key is still empty.
+            Note right of N: Skip the rest of the loop.
+        else is root key in memory
+            N->>+K: Send root key
+
+            Note over K: Cache in Memory
+        end
     end
 ```
 
@@ -328,6 +360,8 @@ sequenceDiagram
     P->>+N: POST /v1/recover
 
     Note over N: Use password to decrypt the root key in the db.
+    
+    Note over N: Validate the decrypted root key.
 
     Note over N: Root key is restored, normal operation can continue.
 ```
@@ -353,6 +387,9 @@ sequenceDiagram
         Note over P: The database will be reset to the initial state.
         Note over P: SPIKE Pilot and SPIKE Nexus will be restarted.
         Note over P: System reset. Admin can re-run `spike init`.
+        Note over P: Explicitly verify the system state after reset.
+        Note over P: Confirm all component restarts.
+        Note over P: Validate database reset.
     end
 ```
 
