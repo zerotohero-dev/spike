@@ -53,16 +53,16 @@ func GetSecret(path string, version int) (map[string]string, bool) {
 }
 
 func Initialize() error {
-	// TODO: if initialized already, do not re-init.
+	existingRootKey := RootKey()
+	if existingRootKey != "" { // if key empty, try getting it from SPIKE Keeper
+		// Already initialized.
+		return nil
+	}
 
 	r, err := crypto.Aes256Seed()
 	if err != nil {
 		return err
 	}
-
-	// TODO: save initialization status to Postgres.
-
-	// TODO: ADR: Use postgres as a backing store.
 
 	rootKeyMu.Lock()
 	rootKey = r

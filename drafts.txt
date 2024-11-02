@@ -510,3 +510,157 @@ Version control for backup format
 Backup rotation strategy
 
 */
+-----
+
+package main
+
+import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"io"
+	"time"
+
+	_ "github.com/lib/pq"
+)
+
+// SecretRecord represents how we'll store the secret in postgres
+type SecretRecord struct {
+	Path       string    `json:"path"`
+	Data       []byte    `json:"data"`       // encrypted Version map
+	Metadata   Metadata  `json:"metadata"`   // stored in plain text
+	UpdatedAt  time.Time `json:"updated_at"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+// encrypt uses AES-GCM to encrypt the data with the given key
+func encrypt(key []byte, plaintext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, fmt.Errorf("creating cipher: %w", err)
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, fmt.Errorf("creating GCM: %w", err)
+	}
+
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return nil, fmt.Errorf("creating nonce: %w", err)
+	}
+
+	// Encrypt and prepend nonce
+	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
+	return ciphertext, nil
+}
+
+// UpsertSecret encrypts and stores the secret in Postgres
+func UpsertSecret(path string, values map[string]string) error {
+	kvMu.Lock()
+	defer kvMu.Unlock()
+
+	// First, update the in-memory KV store
+	kv.Put(path, values)
+
+	// Get the secret we just stored
+	secret, exists := kv.data[path]
+	if !exists {
+		return fmt.Errorf("failed to retrieve secret after Put")
+	}
+
+	// Serialize the versions map to JSON
+	versionsJSON, err := json.Marshal(secret.Versions)
+	if err != nil {
+		return fmt.Errorf("marshaling versions: %w", err)
+	}
+
+	// Encrypt the versions data
+	encryptedData, err := encrypt([]byte(RootKey()), versionsJSON)
+	if err != nil {
+		return fmt.Errorf("encrypting data: %w", err)
+	}
+
+	// Connect to postgres
+	db, err := sql.Open("postgres", "postgresql://localhost:5432/spike?sslmode=disable")
+	if err != nil {
+		return fmt.Errorf("connecting to database: %w", err)
+	}
+	defer db.Close()
+
+	// Upsert query using ON CONFLICT
+	query := `
+		INSERT INTO secrets (
+			path,
+			encrypted_data,
+			metadata,
+			updated_at,
+			created_at
+		) VALUES ($1, $2, $3, $4, $4)
+		ON CONFLICT (path) DO UPDATE SET
+			encrypted_data = EXCLUDED.encrypted_data,
+			metadata = EXCLUDED.metadata,
+			updated_at = EXCLUDED.updated_at
+	`
+
+	metadataJSON, err := json.Marshal(secret.Metadata)
+	if err != nil {
+		return fmt.Errorf("marshaling metadata: %w", err)
+	}
+
+	now := time.Now()
+
+	_, err = db.Exec(query,
+		path,
+		encryptedData,
+		metadataJSON,
+		now,
+	)
+	if err != nil {
+		return fmt.Errorf("upserting to database: %w", err)
+	}
+
+	return nil
+}
+
+// SQL to create the table:
+const createTableSQL = `
+CREATE TABLE IF NOT EXISTS secrets (
+    path TEXT PRIMARY KEY,
+    encrypted_data BYTEA NOT NULL,
+    metadata JSONB NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+`
+----
+
+ADR:
+
+It's generally considered better security practice to create the schema out-of-band (separate from the application) for several reasons:
+
+Principle of Least Privilege:
+
+The application should only have the permissions it needs for runtime (INSERT, UPDATE, SELECT, etc.)
+Schema modification rights (CREATE TABLE, ALTER TABLE, etc.) are not needed during normal operation
+This limits potential damage if the application is compromised
+
+
+Change Management:
+
+Database schema changes can be managed through proper migration tools
+Changes can be reviewed, versioned, and rolled back if needed
+Prevents accidental schema modifications during application restarts
+
+
+Environment Consistency:
+
+Ensures all environments (dev, staging, prod) have identical schemas
+Reduces risk of schema drift between environments
+Makes it easier to track schema changes in version control
+
+
+

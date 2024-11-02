@@ -6,6 +6,11 @@ package store
 
 import "time"
 
+// Delete marks secret versions as deleted for a given path. If no versions are
+// specified, it marks only the current version as deleted. If specific versions
+// are provided, it marks each existing version in the list as deleted. The
+// deletion is performed by setting the DeletedTime to the current time. If the
+// path doesn't exist, the function returns without making any changes.
 func (kv *KV) Delete(path string, versions []int) {
 	secret, exists := kv.data[path]
 	if !exists {

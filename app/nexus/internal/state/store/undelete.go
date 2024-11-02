@@ -4,7 +4,18 @@
 
 package store
 
-// Undelete recovers soft-deleted versions
+// Undelete restores previously deleted versions of a secret at the specified path.
+// It sets the DeletedTime to nil for each specified version that exists.
+//
+// Parameters:
+//   - path: The location of the secret in the store
+//   - versions: A slice of version numbers to undelete
+//
+// Returns:
+//   - error: ErrSecretNotFound if the path doesn't exist, nil on success
+//
+// If a version number in the versions slice doesn't exist, it is silently skipped
+// without returning an error. Only existing versions are modified.
 func (kv *KV) Undelete(path string, versions []int) error {
 	secret, exists := kv.data[path]
 	if !exists {
